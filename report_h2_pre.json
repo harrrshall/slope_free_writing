@@ -1,0 +1,71 @@
+{
+  "pros": [
+    "stress_bin_entropy",
+    "stress_runlen_var",
+    "gap_mean",
+    "gap_var",
+    "gap_cv",
+    "sl_mean",
+    "sl_var",
+    "sl_cv",
+    "ph_mean",
+    "ph_var",
+    "spw_mean",
+    "spw_var",
+    "spw_skew",
+    "oov_rate"
+  ],
+  "lexcols": [
+    "slopword_density",
+    "slopbigram_density",
+    "sloptrigram_density",
+    "not_x_but_y_rate",
+    "distinct2",
+    "distinct3",
+    "rep_topk",
+    "mattr",
+    "mean_word_len",
+    "fk_grade"
+  ],
+  "classes": [
+    "flat",
+    "great",
+    "slop"
+  ],
+  "dev_counts": {
+    "slop": 65,
+    "flat": 64,
+    "great": 63
+  },
+  "h2": {
+    "great_vs_slop": {
+      "contrast": "great_vs_slop",
+      "n": 128,
+      "n_groups": 22,
+      "prosody_only": 0.9295482295482296,
+      "lexical_only": 0.9764346764346765,
+      "combined": 0.9764346764346765,
+      "increment": 0.0,
+      "increment_ci": [
+        -0.032540335213032685,
+        0.030870297667877643
+      ],
+      "increment_mean": -0.0008794946338490434,
+      "resid_full": {
+        "balanced_acc": 0.5611721611721612,
+        "ci_low": 0.44322752455520986,
+        "ci_high": 0.6739582079370807,
+        "perm_p": 0.16483516483516483,
+        "perm_mean": 0.4928910032889367
+      },
+      "resid_minus_distinct": {
+        "balanced_acc": 0.6167277167277168,
+        "ci_low": 0.48651082251082245,
+        "ci_high": 0.741190945858016,
+        "perm_p": 0.03896103896103896,
+        "perm_mean": 0.49291878234123976
+      }
+    }
+  },
+  "h3": {}
+}

@@ -1,0 +1,166 @@
+{
+  "tier_cols": [
+    "stress_bin_entropy",
+    "stress_runlen_var",
+    "gap_mean",
+    "gap_var",
+    "gap_cv",
+    "sl_mean",
+    "sl_var",
+    "sl_cv",
+    "ph_mean",
+    "ph_var",
+    "spw_mean",
+    "spw_var",
+    "spw_skew",
+    "oov_rate"
+  ],
+  "n_dev": 192,
+  "dev_class_counts": {
+    "slop": 65,
+    "flat": 64,
+    "great": 63
+  },
+  "binary": {
+    "logreg": {
+      "balanced_acc": 0.9841269841269842,
+      "ci_low": 0.9583333333333333,
+      "ci_high": 1.0,
+      "macro_f1": 0.9842431761786601,
+      "labels": [
+        "flat",
+        "great"
+      ],
+      "confusion": [
+        [
+          64,
+          0
+        ],
+        [
+          2,
+          61
+        ]
+      ],
+      "perm_score": 0.9845238095238095,
+      "perm_p": 0.000999000999000999,
+      "perm_mean": 0.5090807291152261,
+      "perm_max": 0.8322222222222223,
+      "perm_n": 1000
+    },
+    "tree": {
+      "balanced_acc": 0.9448164682539683,
+      "ci_low": 0.9034659039705185,
+      "ci_high": 0.9824637023593465,
+      "macro_f1": 0.9448682170542635,
+      "labels": [
+        "flat",
+        "great"
+      ],
+      "confusion": [
+        [
+          61,
+          3
+        ],
+        [
+          4,
+          59
+        ]
+      ]
+    }
+  },
+  "three_class": {
+    "logreg": {
+      "balanced_acc": 0.9170571326821326,
+      "ci_low": 0.8745170671801106,
+      "ci_high": 0.9537888715758398,
+      "macro_f1": 0.9164587608367136,
+      "labels": [
+        "flat",
+        "great",
+        "slop"
+      ],
+      "confusion": [
+        [
+          61,
+          1,
+          2
+        ],
+        [
+          2,
+          59,
+          2
+        ],
+        [
+          5,
+          4,
+          56
+        ]
+      ],
+      "perm_score": 0.9181318681318681,
+      "perm_p": 0.000999000999000999,
+      "perm_mean": 0.3379709006109354,
+      "perm_max": 0.5984848484848484,
+      "perm_n": 1000
+    },
+    "tree": {
+      "balanced_acc": 0.8804334554334554,
+      "ci_low": 0.8327956806865755,
+      "ci_high": 0.9231476996743391,
+      "macro_f1": 0.880537833534167,
+      "labels": [
+        "flat",
+        "great",
+        "slop"
+      ],
+      "confusion": [
+        [
+          56,
+          2,
+          6
+        ],
+        [
+          2,
+          57,
+          4
+        ],
+        [
+          5,
+          4,
+          56
+        ]
+      ]
+    }
+  },
+  "baselines": {
+    "length_only_ba": 0.5105406746031746,
+    "mattr_only_ba": 0.5360863095238095
+  },
+  "prosody_minus_best_baseline": 0.44804067460317465,
+  "residualized": {
+    "balanced_acc": 0.9606894841269842,
+    "ci_low": 0.9236702541667785,
+    "ci_high": 0.9923076923076923,
+    "covariates": [
+      "sl_mean",
+      "mattr"
+    ]
+  },
+  "era_balanced": {
+    "binary_ba": 0.9721798780487805,
+    "n": 187,
+    "n_euclaise": 60
+  },
+  "importance_groups": {
+    "syllable_dist": 0.02932,
+    "clause_spacing": 0.02504,
+    "sentence_rhythm": 0.01453,
+    "stress_timing": 0.00903,
+    "confound": 0.00437
+  },
+  "top3_groups": [
+    "syllable_dist",
+    "clause_spacing",
+    "sentence_rhythm"
+  ],
+  "rhythm_group_in_top3": true
+}

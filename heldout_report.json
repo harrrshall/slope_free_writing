@@ -1,0 +1,40 @@
+{
+  "heldout_binary_ba": 0.96875,
+  "ci_low": 0.9,
+  "ci_high": 1.0,
+  "n_heldout": 33,
+  "pairwise_heldout": {
+    "great_vs_flat": {
+      "ba": 0.96875,
+      "ci_low": 0.9,
+      "ci_high": 1.0,
+      "n": 33
+    },
+    "great_vs_slop": {
+      "ba": 0.907843137254902,
+      "ci_low": 0.8,
+      "ci_high": 1.0,
+      "n": 32
+    },
+    "flat_vs_slop": {
+      "ba": 0.9375,
+      "ci_low": 0.8461538461538461,
+      "ci_high": 1.0,
+      "n": 31
+    }
+  },
+  "importance_groups": {
+    "syllable_dist": 0.03313,
+    "sentence_rhythm": 0.01937,
+    "confound": 0.01188,
+    "stress_timing": 0.0075,
+    "clause_spacing": 0.00162
+  },
+  "top3_groups": [
+    "syllable_dist",
+    "sentence_rhythm",
+    "confound"
+  ],
+  "rhythm_group_in_top3": true,
+  "tree_text": "|--- spw_mean <= 0.10\n|   |--- ph_mean <= 0.85\n|   |   |--- class: great\n|   |--- ph_mean >  0.85\n|   |   |--- class: flat\n|--- spw_mean >  0.10\n|   |--- ph_mean <= 2.02\n|   |   |--- class: flat\n|   |--- ph_mean >  2.02\n|   |   |--- ph_mean <= 2.12\n|   |   |   |--- class: great\n|   |   |--- ph_mean >  2.12\n|   |   |   |--- class: flat\n"
+}
