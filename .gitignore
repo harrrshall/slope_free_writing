@@ -9,3 +9,6 @@ texts/
 
 # OS
 .DS_Store
+
+# Phase-1c pristine pre-normalization backup (recoverable from first commit)
+data/passages_raw/

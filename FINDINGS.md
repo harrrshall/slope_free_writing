@@ -57,31 +57,36 @@ Format for each finding:
     prosody's residual survives: great-vs-slop 0.695, modhuman-vs-slop 0.752, binding great-vs-modhuman
     **0.669 dev / 0.726 held-out** (group-perm p≈0.002–0.005).
   - H3-A (genre+era matched): modhuman-vs-slop prosody-only **0.891 dev / 0.904 held-out** (p≈0.001).
-  - ROBUSTNESS to the typography confound: residualizing out BOTH lexical-slop AND typography (quote
-    glyphs), **modhuman-vs-slop survives at 0.713 (CI [0.612, 0.813])**; great-vs-modhuman weakens to
-    0.606 (CI [0.522, 0.699], p=0.016); great-vs-slop 0.609 (CI touches chance).
-- **Confidence**: medium. Every headline number was independently reproduced; the conclusion holds
-  most strongly for modern-human-vs-AI, which survives lexical-slop + typography control.
-- **Limits (found by independent adversarial verification)**:
-  - **Typography confound**: modhuman uses different quote glyphs (`''`, spaced apostrophes) absent in
-    great/modgreat; a typography-only classifier reaches 0.76–0.84. Prosody survives it for
-    modhuman-vs-slop but only marginally for great-vs-modhuman. MUST normalize typography across classes.
-  - **Word length**: mean_word_len differs by class and separates great-vs-flat at 0.93 alone; it was
-    NOT in the Phase-0 residualizer (the Phase-1b slop baseline DOES include it, so the binding results
-    control it, but the F1 confound story is incomplete).
+  - HARDENED (Phase 1c): typography normalized UNIFORMLY across all piles AT SOURCE (the confound's
+    correct fix; a typography-only classifier drops 0.758->0.481 on great-vs-modhuman, prosody features
+    unchanged), flat de-duplicated, perm n=1000. On this cleaned corpus the binding contrasts HOLD:
+    **great-vs-modhuman resid-vs-SLOP = 0.653 (CI [0.571,0.732], p=0.001), held-out 0.695**; increment of
+    prosody over the slop baseline = **+0.102 (CI [0.034,0.168], now significant**, was +0.016 ns);
+    **modhuman-vs-slop = 0.891 dev / 0.904 held-out (p=0.001)**. (NB: residualizing typography as a
+    *covariate* over-removed prosody variance to 0.606/p=0.016 in Phase 1b; normalizing at source is the
+    correct method and the signal survives it.)
+- **Confidence**: medium-high. Every headline number was independently reproduced by 6 adversarial
+  verifiers, and the binding results survived the hardening pass (typography removed at source, flat
+  deduped, n=1000) with held-out confirmation. Strongest for modern-human-vs-AI.
+- **Limits**:
+  - RESOLVED in Phase 1c: typography confound (normalized at source, classifier 0.76->0.48), flat
+    dev/held dedup (14 near-dup Reuters passages removed; binding contrasts unaffected), word length
+    (in the slop baseline the binding residual controls it), permutation n (=1000).
   - The dominant prosody feature group by permutation importance is **syllable_dist, not sentence-length
-    variation** (earlier wording was imprecise).
-  - The FULL-lexical "kill" reflects a near-ceiling/circular baseline on great-vs-slop, not purely the
-    diversity proxies (mechanism was overstated).
-  - Minor: 2 byte-identical flat passages + ~6 flat near-dups straddle dev/held (affects flat held-out
-    only, NOT the binding great/modhuman/slop contrasts); permutation p is resolution-floor-bounded;
-    modgreat is small-n (8 books) and exploratory.
-  - SLOP_BASELINE_COLS was chosen after seeing FULL kill the result (researcher d.o.f.); mitigated by
-    confirming on the un-peeked held-out + new contrasts.
-- **Implication**: H2 (orthogonality) and H3 (genre/era) are supported with caveats. Before
-  publication-grade claims, do a Phase-1c hardening pass: normalize typography across all classes,
-  de-duplicate flat, add mean_word_len to the F1 residualizer, raise permutation n to ≥1000, then
-  re-confirm. The reward-term work (Phase 2) should lead with the modern-human-vs-AI contrast.
+    variation** (earlier wording was imprecise; corrected per M14).
+  - The FULL-lexical "kill" reflects a near-ceiling/circular baseline on great-vs-slop (the slop lists
+    were built from AI text), not purely the diversity proxies (mechanism was overstated per M14).
+  - This is human-vs-AI separation + a within-human quality gradient; it is **not** a demonstration that
+    prosody ranks fine-grained writing quality. great-vs-flat (0.98) is genre-confounded (inherent).
+  - modgreat is small-n (8 books, exploratory); the within-genre era null holds at the sub-sentence level.
+  - SLOP_BASELINE_COLS was chosen after FULL killed the result (researcher d.o.f.); mitigated by
+    pre-registered held-out confirmation on the cleaned, un-peeked corpus.
+- **Implication**: H2 (orthogonality) and H3 (genre/era) are supported and survive the hardening pass.
+  Per D14, prosody is NOT a standalone quality reward; the strongest, most robust signal is rhythmic
+  *variation* distinguishing modern-human from AI prose. The natural next step is to test it as a
+  **complementary diversity / anti-monotony term** (lead with the modhuman-vs-slop contrast), and to run
+  the same confound-controlled gauntlet on the next candidate signals (narrative surprise, discourse
+  coherence, syntactic variety).
 
 ---
 

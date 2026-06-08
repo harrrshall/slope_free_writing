@@ -176,3 +176,36 @@ OVERALL Phase-1b PROCEED iff H2 PROCEED AND H3 PROCEED. chance=0.50.
 - REPRODUCED independently (matched): length matching 272-277; zero cross-class text leakage (max Jaccard 0.0036); zero source_id dev/held leakage; great-vs-flat 0.984 / great-vs-slop 0.9295 / 3-class 0.917 / held-out 0.969/0.908; baselines at chance; M11 sklearn-perm degeneracy + group-level null at chance; H2 resid-vs-FULL 0.561 KILL vs resid-vs-SLOP 0.695 survive; binding great-vs-modhuman 0.669 dev / 0.726 held-out; feature parquet re-extracts to 0.0 diff; M3 guard.
 - ISSUES FOUND: (1) TYPOGRAPHY confound (M13): modhuman quote-glyphs differ; typography-only classifier 0.76-0.84. Robustness re-run (typography control, group CV, group bootstrap): prosody resid-vs-SLOP+TYPOGRAPHY -> modhuman-vs-slop 0.713 CI[0.612,0.813] (survives), great-vs-modhuman 0.606 CI[0.522,0.699] p=0.016 (above chance but weakened), great-vs-slop 0.609 CI[0.482,0.741] (touches chance). (2) WORD-LENGTH confound (M14): mean_word_len separates great-vs-flat 0.93 alone, absent from the Phase-0 residualizer (present in Phase-1b slop baseline). (3) DRIVER mis-stated: importance ranks syllable_dist > sentence_rhythm. (4) H2 mechanism overstated (joint slop+diversity + near-ceiling, not purely diversity proxies). (5) flat: 2 byte-identical + ~6 near-dup pairs straddle dev/held (flat-only; not the binding contrasts). (6) perm p floor-bounded; modgreat small-n.
 - NET: core numbers are real and reproducible; H2/H3 supported with caveats; strongest clean result = modern-human-vs-AI (survives lexical-slop + typography control). Logged as FINDINGS F2. Phase-1c hardening (typography normalization, flat dedup, mean_word_len covariate, perm n>=1000) recommended before publication-grade claims.
+
+## 2026-06-08T10:15:24 - Phase 1c PRE-REGISTERED re-confirmation (caveat fixes; thresholds unchanged, M7)
+
+- Goal: re-confirm the Phase-1b binding results after fixing the verification caveats: (a) typography normalized UNIFORMLY across ALL piles IN PLACE (M13 fix; passage_ids preserved -> held-out quarantine undisturbed; verified typography-only great-vs-modhuman 0.758->0.481 chance, prosody features ~unchanged), (b) flat de-duplicated (14 near-dup Reuters passages removed from the split; binding great/modhuman/slop membership UNCHANGED), (c) mean_word_len is in SLOP_BASELINE so the binding H2 residual already controls word length, (d) permutation n=1000.
+- Binding thresholds UNCHANGED from Phase 1b (M7): H2b.1 great-vs-modhuman prosody residualized vs SLOP_BASELINE on the NORMALIZED corpus: CI_low>0.50 AND group_perm p<0.01. H3-A modhuman-vs-slop prosody-only: ba>=0.65 AND CI_low>0.50 AND p<0.01.
+- HONESTY on peeking: I already saw the typography-as-COVARIATE robustness numbers (great-vs-modhuman 0.606 p=0.016; modhuman-vs-slop 0.713). The p1c re-run uses the cleaner normalize-at-source method on partly-peeked dev contrasts, so the genuinely UN-PEEKED confirmation is the HELD-OUT on the normalized+deduped corpus (heldout_report_p1c.json), scored once.
+- CONFIRM iff: on the normalized corpus, great-vs-modhuman resid-vs-SLOP keeps CI_low>0.50 & p<0.01 (dev) AND held-out great-vs-modhuman slop-residual stays >chance AND modhuman-vs-slop holds ba>=0.65. WEAKEN iff great-vs-modhuman resid-vs-SLOP drops to CI_low<=0.50 (then modhuman-vs-slop remains the primary robust result).
+- Artifacts (do NOT clobber frozen Phase-1b): features_A_p1c.parquet, lexical_A_p1c.parquet, quarantine_split_p1c.json, report_p1c.json, heldout_report_p1c.json. data/passages_raw/ holds the pristine pre-normalization text.
+
+## EVAL-P1 features_A_p1c.parquet + lexical_A_p1c.parquet -> report_p1c.json (H2+H3)
+- H2 great_vs_slop: prosody_only=0.930 slop_baseline=0.930 full_lexical=0.969 increment_over_slop=+0.046 CI[0.0, 0.095]; resid_vs_SLOP ba=0.696 CI[0.585,0.809] p=0.0020 | resid_vs_FULL(diag) ba=0.553 CI_low=0.445
+- H2 modhuman_vs_slop: prosody_only=0.891 slop_baseline=0.915 full_lexical=0.961 increment_over_slop=+0.046 CI[0.009, 0.086]; resid_vs_SLOP ba=0.752 CI[0.642,0.851] p=0.0010 | resid_vs_FULL(diag) ba=0.605 CI_low=0.497
+- H2 great_vs_modhuman [BINDING H2b.1]: prosody_only=0.787 slop_baseline=0.740 full_lexical=0.732 increment_over_slop=+0.102 CI[0.034, 0.168]; resid_vs_SLOP ba=0.653 CI[0.571,0.732] p=0.0010 | resid_vs_FULL(diag) ba=0.621 CI_low=0.546
+- H3 modhuman_vs_slop: ba=0.891 CI[0.809,0.954] perm_p=0.0010 (n=129,g=72)
+- H3 great_vs_modhuman: ba=0.787 CI[0.690,0.879] perm_p=0.0010 (n=127,g=70)
+- H3 great_vs_modhuman_LEXICALonly: ba=0.732 CI[0.648,0.812] (n=127,g=70)
+- H3 great_vs_modgreat_full: ba=0.656 CI[0.504,0.784] (n=125,g=16)
+- H3 modgreat_vs_slop_subsent_noHF: ba=0.836 CI[0.661,0.958] (n=109,g=16)
+- H3 modgreat_vs_great_subsent_noHF: ba=0.382 CI[0.246,0.520] (n=107,g=14)
+
+- PHASE-1b GATE report_p1c.json: VERDICT=PROCEED (pending held-out confirmation H2b.2) (H2b.1 great-vs-modhuman resid-vs-SLOP ba=0.653 CI_low=0.571 p=0.0010; H3-A modhuman-vs-slop ba=0.891 CI_low=0.809 p=0.0010)
+
+- P1 HELD-OUT (once): modhuman_vs_slop ba=0.904 CI[0.799,1.000], great_vs_modhuman ba=0.849 CI[0.753,0.917], great_vs_slop ba=0.908 CI[0.733,1.000], great_vs_modhuman_slopresid ba=0.695 CI[0.570,0.812], great_vs_slop_slopresid ba=0.816 CI[0.575,0.931]
+
+## 2026-06-08T10:40:04 - Phase 1c RESULT: F2 CONFIRMED on hardened corpus (PROCEED, held-out confirmed)
+
+- Phase 1c (caveats fixed: typography normalized at source, flat deduped, perm n=1000) -> VERDICT PROCEED, held-out CONFIRMED. F2 CONFIRMED and strengthened.
+- H2b.1 BINDING great-vs-modhuman resid-vs-SLOP (normalized corpus): ba=0.653 CI[0.571,0.732] p=0.001 (Phase-1b was 0.669; typography-as-COVARIATE had over-removed to 0.606/p=0.016). increment_over_slop +0.102 CI[0.034,0.168] (now significant; was +0.016 ns). HELD-OUT great-vs-modhuman slop-residual = 0.695 (un-peeked, >chance) -> H2b.2 confirmed.
+- H3-A modhuman-vs-slop prosody-only: 0.891 dev / 0.904 held-out, p=0.001 (unchanged; rock solid).
+- great-vs-slop resid-vs-SLOP 0.696 dev / 0.816 held-out p=0.002; resid-vs-FULL still collapses 0.553 (the diversity-proxy artifact, expected). modhuman-vs-slop resid-vs-SLOP 0.752 dev p=0.001.
+- Era null intact: modgreat-vs-great sub-sentence (no Hemingway/Faulkner) = 0.382 (below chance) -> era not a confound at sub-sentence level. great-vs-modgreat full 0.656 (H/F + sentence-length driven, exploratory).
+- INTERPRETATION: the typography confound was NOT driving the binding result; removing it at source (vs as a residualization covariate, which over-removes prosody variance) shows prosody's orthogonality to lexical-slop HOLDS, and is cleaner than Phase 1b. The earlier 0.606/p=0.016 was a covariate-method artifact.
+- Caveats now CLEARED: typography (fixed), flat dedup (fixed), word-length (in slop baseline), perm n (1000). Remaining honest limits: modgreat small-n (8 books, exploratory); great-vs-flat genre-confound is inherent (not a quality claim); the result is human-vs-AI + within-human-quality separation, strongest for modern-human-vs-AI; prosody-as-standalone-quality-reward still rejected (D14) - this supports prosody as a complementary/diversity signal.

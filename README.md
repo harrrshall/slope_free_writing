@@ -35,9 +35,17 @@ Phase 0 (separation pre-test) — **complete: PROCEED** (2026-06-07). Text-proso
 great/flat/slop well above chance (binary great-vs-flat 0.984, held-out 0.969; within-narrative
 great-vs-slop 0.930, held-out 0.908; group-level permutation p=0.001), and the separation is not
 explained by passage length or lexical richness (baselines at chance; survives residualization).
-Honest caveats now driving Phase 1: great-vs-flat is genre-confounded (fiction vs newswire) and
-GREAT is pre-1928 (era). See `FINDINGS.md` F1 and `METHODOLOGY.md`. Next: Phase 1 (orthogonality +
-genre/era control).
+See `FINDINGS.md` F1.
+
+Phase 1 (orthogonality H2 + genre/era control H3) — **complete: PROCEED, hardened** (2026-06-08).
+Against a clean lexical-slop baseline, prosody is partly independent of lexical-slop detection:
+binding great-vs-modhuman residual 0.653 (held-out 0.695, p=0.001), and modhuman-vs-slop (modern
+human vs AI) 0.891 / held-out 0.904. Survives a Phase-1c hardening pass (typography normalized at
+source, flat de-duplicated, permutation n=1000) and an independent 6-agent verification that
+reproduced every core number. The strongest, most robust signal is rhythmic *variation*
+distinguishing modern-human from AI prose. Per `DECISIONS.md` D14, prosody is NOT a standalone
+quality reward; it is a candidate complementary / diversity (anti-monotony) signal. See `FINDINGS.md`
+F2. Next: Phase 2 (test it as a diversity term) and run the same gauntlet on further candidate signals.
 
 ## Guiding principle
 
