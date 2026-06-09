@@ -20,7 +20,7 @@ from sklearn.inspection import permutation_importance
 from features_lib import PROSODY_COLS, TIER_B_COLS, FEATURE_GROUPS, RHYTHM_GROUPS
 from lexical_features import LEXICAL_COLS, DISTINCT_COLS, DIVERSITY_COLS, SLOP_BASELINE_COLS
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def logreg():
@@ -255,7 +255,7 @@ def run_phase1(df, split, args):
             extra = f" perm_p={v['perm_p']:.4f}" if "perm_p" in v else ""
             lines.append(f"- H3 {k}: ba={v['balanced_acc']:.3f} CI[{v['ci_low']:.3f},{v['ci_high']:.3f}]{extra} (n={v['n']},g={v['n_groups']})")
     summary = "\n".join(lines) + "\n"
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(summary)
     print(summary)
 
@@ -368,7 +368,7 @@ def main():
         f"- era-balanced binary ba={report['era_balanced']['binary_ba']:.3f}\n"
         f"- importance groups (ranked): {ranked}\n"
         f"- rhythm group in top3: {report['rhythm_group_in_top3']} (top3={top3})\n")
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(summary)
     print(summary)
 

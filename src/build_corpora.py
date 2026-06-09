@@ -24,7 +24,7 @@ manifest.csv. Real human prose (Gutenberg + Reuters) satisfies M4.
 import os, re, csv, sys
 import numpy as np
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LO, HI = 150, 400
 N_PER_CLASS = 80
 PER_SOURCE_CAP = 12          # ~15% of 80
@@ -314,7 +314,7 @@ def report(label, sel, src_ct, bin_ct):
 def add_piles(names):
     """Phase 1: APPEND new pile(s) to the existing corpus without touching frozen great/flat/slop."""
     import pandas as pd
-    mpath = os.path.join(REPO, "manifest.csv")
+    mpath = os.path.join(REPO, "data", "manifest.csv")
     man = pd.read_csv(mpath)
     rows = []
     for name in names:
@@ -363,7 +363,7 @@ def main():
     report("euclaise", bsel, bsrc, bbin)
     write_pile("euclaise", bsel, rows, band="era_band")
 
-    mpath = os.path.join(REPO, "manifest.csv")
+    mpath = os.path.join(REPO, "data", "manifest.csv")
     with open(mpath, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["passage_id", "class", "source_id", "word_count",
                                           "char_len", "era", "chunk_method", "band"])

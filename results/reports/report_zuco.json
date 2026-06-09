@@ -1,0 +1,57 @@
+{
+  "skip": {
+    "prosody_block_F": 100.88533932181652,
+    "prosody_block_p": 1.0025905028342362e-21,
+    "n": 48997,
+    "is_boundary_coef": 0.009006527907018343,
+    "is_boundary_p": 0.614498461049546,
+    "prosody_coefs": {
+      "nsyl": -0.035,
+      "is_content": 0.2445,
+      "is_boundary": 0.009
+    },
+    "prosody_p": {
+      "nsyl": 0.1429,
+      "is_content": 0.0,
+      "is_boundary": 0.6145
+    }
+  },
+  "reading_time": {
+    "prosody_block_F": 11.599710014370226,
+    "prosody_block_p": 0.008888081794062514,
+    "n": 28541,
+    "is_boundary_coef": 0.002184735562644204,
+    "is_boundary_p": 0.6640299068587938,
+    "prosody_coefs": {
+      "nsyl": 0.0146,
+      "is_content": -0.0169,
+      "is_boundary": 0.0022
+    },
+    "prosody_p": {
+      "nsyl": 0.0492,
+      "is_content": 0.0121,
+      "is_boundary": 0.664
+    }
+  },
+  "theta_eeg": {
+    "prosody_block_F": 2.843824413667971,
+    "prosody_block_p": 0.4163363567917947,
+    "n": 28517,
+    "is_boundary_coef": -0.0018416494492566324,
+    "is_boundary_p": 0.6453397273183037,
+    "prosody_coefs": {
+      "nsyl": 0.0018,
+      "is_content": 0.0101,
+      "is_boundary": -0.0018
+    },
+    "prosody_p": {
+      "nsyl": 0.7533,
+      "is_content": 0.0959,
+      "is_boundary": 0.6453
+    }
+  },
+  "n_words": 48997,
+  "n_subjects": 8,
+  "n_sentences": 349,
+  "verdict": "PROSODY-REAL"
+}

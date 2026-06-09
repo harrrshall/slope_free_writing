@@ -25,13 +25,15 @@
 - Missing, must install: `spacy` (+ `en_core_web_sm` model), `datasets`, `sacremoses`.
 - Network reachable: pypi.org, files.pythonhosted.org, huggingface.co, gutenberg.org,
   github.com (release assets).
-- `texts/1342.txt.gz` (Gutenberg #1342, Pride & Prejudice) is already on disk.
+- `data/texts/1342.txt.gz` (Gutenberg #1342, Pride & Prejudice) is already on disk.
 
-### Repo layout note (logged, do not silently relocate)
-AGENTS.md references `docs/ENVIRONMENT.md` and `docs/*`, but there is **no `docs/`
-subdirectory**; all docs live at the repo root. This file is the root `ENVIRONMENT.md`,
-the one that exists. Writing a second copy under `docs/` would split the source of truth.
-If the `docs/` layout is ever adopted, do it as one move and log it in DECISIONS.md.
+### Repo layout note (the `docs/` layout was adopted 2026-06-08; see DECISIONS D15)
+The repository is now organized into `docs/` (this file and all other research markdown),
+`src/` (Python modules + scripts), `tests/`, `data/` (inputs incl. `manifest.csv`, `slop_lists/`,
+`passages/`, `passages_raw/`, `texts/`), and `results/` (generated `*.parquet` / `*.json`).
+Scripts re-anchor `REPO` to the repo root (`dirname(dirname(__file__))`), so every data/artifact
+path still resolves from the root exactly as before. Run scripts as `.venv/bin/python3 src/<name>.py`
+and tests as `.venv/bin/python -m pytest` (config in `pytest.ini`, `pythonpath = src`).
 
 ---
 
@@ -157,3 +159,17 @@ None for Phase 0. `sudo`/`apt` cannot run unattended (password required), but ev
 dependency (eSpeak, libespeak-ng) is already present, and every Python package installs to
 `~/.local` via `--break-system-packages`. The only network dependencies are the HF datasets
 and the Gutenberg/spaCy fetches, all reachable this session.
+
+---
+
+## 7. Remote GPU (heavy / Stage-2+ jobs only)
+
+A remote CUDA box is available for work the CPU here cannot do cheaply — training the Helsinki
+prominence extractor, neural prosody / CWT extractors, anything in EXTRACTION_UPGRADE_PLAN Stage 2/2.5/3.
+The CPU experiments (Phase 0/1, the order-aware sequence Stage 1) do **not** need it.
+
+- **Credentials + SSH key live in the gitignored `.secrets/` directory** (`.secrets/gpu_access.md`,
+  `.secrets/gpu_id_ed25519`). NEVER commit or print them; `.secrets/` is in `.gitignore`.
+- **HARD RULE: use GPU index `5` only** (GPU numbering starts at 0, so it is the 6th device). Do not
+  touch other GPUs. Confirm it is free first with `nvidia-smi -i 5`. Full connection details are in
+  `.secrets/gpu_access.md`.

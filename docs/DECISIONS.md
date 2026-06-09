@@ -123,3 +123,71 @@ the context, the reasoning, and the status. Newest at the bottom.
   within-human contrast BEFORE concluding the quality signal is absent. Caveat: a learned black-box
   prosody scorer is harder to audit for confounds and easier to reward-hack (M2) if optimized against, so
   it is better suited to MEASUREMENT than to being a reward term.
+
+### D15 — Adopt the `docs/ / src/ / tests/ / data/ / results/` layout  (status: accepted)
+- Context: the repo was flat — 42 files at root (code, 9 markdown docs, 16 generated artifacts, manifest)
+  intermixed. AGENTS.md and README already referenced `docs/*` paths that did not exist; ENVIRONMENT.md
+  had pre-sanctioned the move ("if the `docs/` layout is ever adopted, do it as one move and log it in
+  DECISIONS.md").
+- Decision: move all research markdown to `docs/` (README.md + AGENTS.md stay at root), all Python
+  modules + scripts to `src/`, the pytest files to `tests/`, generated artifacts (`*.parquet`,
+  `*report*.json`, `quarantine_split*.json`) to `results/`, and `manifest.csv` + the gitignored `texts/`
+  into `data/`. Add `pytest.ini` (`pythonpath = src`) so tests import modules by bare name.
+- Reasoning / how the path coupling was preserved: every script computed `REPO =
+  dirname(abspath(__file__))` and joined it with `data/`, `manifest.csv`, artifact names, and
+  `EXPERIMENT_LOG.md`. Re-anchored `REPO` to `dirname(dirname(abspath(__file__)))` so it still resolves to
+  the repo root after moving one level into `src/`; updated the manifest joins to `data/manifest.csv`, the
+  log writes to `docs/EXPERIMENT_LOG.md`, and the four generated-output defaults to `results/`. Verified by
+  the full pytest suite (5/5 pass, which exercises the import-time slop-list load from `data/slop_lists`)
+  plus a smoke check confirming all 10 path-using modules resolve `REPO` to the repo root. AGENTS.md §6,
+  README, and ENVIRONMENT.md updated to the new run commands; historical EXPERIMENT_LOG entries left
+  unchanged (append-only record).
+
+### D16 — Hand-built order/sequence features are a DEAD END for the within-human quality signal; the next extraction lever is VALUES, not ORDER  (status: accepted)
+- Context: EXTRACTION_UPGRADE_PLAN asked whether the ~0.65 within-human ceiling is the signal or our crude
+  (order-blind) extraction. Stage 1 tested the ORDER axis: 10 pre-registered order-aware features on the
+  existing SL/SPW/SYMS/PHG series, great-vs-modhuman, full gauntlet. Result = clean KILL, verified robust by
+  4 adversarial agents (FINDINGS F3): order adds nothing over the histograms (residualized-against-summary =
+  0.551 chance, below the residualized shuffle), survives no model/seed/subset rescue.
+- Decision: do NOT pursue hand-built order/sequence features further, and do NOT build CWT / learned-sequence
+  models *on these dictionary-stress / sentence-length series* (M9 — a richer ORDER encoder on the same
+  series will not clear the group-level noise when the order signal is already redundant with the histograms
+  and ~0.03 in size). The order axis of "is the extraction the bottleneck?" is answered: NO.
+- Reasoning: the binding residual test is decisive and the effect is tiny + redundant; spending the GPU on a
+  sequence model over the same crude per-unit series would be optimizing the wrong axis. The LABEL/VALUES
+  axis (speech-grounded per-unit prominence, Helsinki/CWT — EXTRACTION_UPGRADE_PLAN Stage 2) and the
+  learned-representation ceiling probe (D14) remain open and are the honest next levers; so is a
+  higher-ceiling/higher-power within-genre/era dataset (the deeper limiter, now compounded by the power
+  finding: n=127 / 70 groups give CIs ~±0.10). Sharpens, does not supersede, the Stage plan.
+
+### D17 — Strategic redirect: de-confound the contrast (within-author), ONE values-axis test, promote the human-vs-AI robustness axis  (status: accepted, with open design questions)
+- Context: two kills now acquit the "processing" explanations — classifier head (D14) and order (F3, D16). Field
+  context: fine-grained creative-quality judging tops ~0.70 even for frontier holistic judges; no single feature
+  ranks literariness. So the prior that a remaining extraction trick unlocks a big within-human-quality jump is
+  LOW. Meanwhile the great-vs-modhuman contrast is not just under-powered (±0.10 CIs) but CONFOUNDED
+  (Reddit-vs-classics = register+era), which poisons POSITIVES too (a lift could be detecting era, not quality) —
+  the same confound that made great-vs-flat's 0.98 uninterpretable. Enlarging the contrast ("more Reddit + more
+  Gutenberg") does not fix this.
+- Decision (user-led, 2026-06-08):
+  1. DATA FIRST, de-confounded by a WITHIN-AUTHOR quality contrast (same author's acknowledged-strong vs
+     neglected works; era/register/idiom held constant), NOT merely enlarged.
+  2. Then exactly ONE extraction test: the VALUES axis (speech-grounded per-unit prominence, Component A /
+     Helsinki, replacing crude dictionary citation-stress) on the clean contrast. NO sequence/representation
+     models (order acquitted by F3; reps are downstream of values and too data-hungry for this scale).
+  3. Pre-commit BEFORE collecting: a power analysis with a target n (resolve ~0.03 at ±0.05 given group-aware
+     CV), the ≥20-seed shuffle null (M15), and a STOP RULE deciding now what result declares the ceiling real.
+  4. Line up the STRONG axis as the pivot, not an afterthought: prosody as a paraphrase-robust ORIGIN/STYLE
+     (human-vs-AI) signal — robust (0.89), novel, with an edge where lexical detectors collapse under paraphrase.
+     A clean negative on the quality axis ("prosody robustly separates human-vs-AI but does not finely rank
+     within-human quality; classifier, order, and per-unit signal all ruled out as the cause") is publishable.
+- Reasoning / what we rejected: rejected "enlarge the same confounded contrast" (fixes power, not validity);
+  rejected running all three Stage levers (one decisive test > three cheap rungs); rejected sequence models (D16).
+- OPEN design questions (must resolve before building, see EXTRACTION_UPGRADE_PLAN §7 / agent pushback):
+  (a) POWER-vs-CONFOUND tension: "a few authors" (group=author) gives ~3-5 groups → CIs balloon, contradicting
+      the power target. Likely resolution: MANY authors (~20-40) paired within-author, group=author.
+  (b) The quality LABEL is the crux and is partly prose-driven (circularity); use an EXTERNAL noisy proxy
+      (anthology/syllabus/scholarly attention vs out-of-print), stated as imperfect, never derived from prosody.
+      "commercial" output re-imports the genre confound; "early" re-imports a within-author era gradient — prefer
+      canonical-vs-neglected of the SAME subgenre.
+  (c) SEQUENCING: the paraphrase-robustness test (pivot) is cheap, runs on existing data, and is where the
+      novelty is; candidate to run BEFORE/ALONGSIDE the expensive within-author build, not only as a fallback.

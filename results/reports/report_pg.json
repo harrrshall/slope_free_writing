@@ -1,0 +1,115 @@
+{
+  "note": "EXPLORATORY; PG=nonfiction essay vs slop/modhuman=fiction (genre confound, M5)",
+  "pg_passages": 223,
+  "pg_essays": 18,
+  "contrasts": {
+    "pg_vs_slop": {
+      "contrast": "pg_vs_slop",
+      "n": 303,
+      "n_groups": 33,
+      "class_counts": {
+        "pg": 223,
+        "slop": 80
+      },
+      "prosody_only": 0.9597813901345291,
+      "prosody_ci": [
+        0.9183106942384383,
+        0.9911335688121402
+      ],
+      "prosody_perm_p": 0.000999000999000999,
+      "slop_only": 0.95,
+      "combined": 0.9727578475336323,
+      "length_only": 0.5057735426008968,
+      "increment_over_slop": 0.022757847533632303,
+      "increment_ci": [
+        -0.008537345066019506,
+        0.05779820498630238
+      ],
+      "mean_words": {
+        "pg": 282.17040358744396,
+        "slop": 276.6375
+      }
+    },
+    "pg_vs_modhuman": {
+      "contrast": "pg_vs_modhuman",
+      "n": 303,
+      "n_groups": 94,
+      "class_counts": {
+        "pg": 223,
+        "modhuman": 80
+      },
+      "prosody_only": 0.8802970852017937,
+      "prosody_ci": [
+        0.8286885011235198,
+        0.9241670643173108
+      ],
+      "prosody_perm_p": 0.000999000999000999,
+      "slop_only": 0.8762892376681615,
+      "combined": 0.8887892376681614,
+      "length_only": 0.6517656950672646,
+      "increment_over_slop": 0.012499999999999956,
+      "increment_ci": [
+        -0.02564266985864104,
+        0.052329991767305746
+      ],
+      "mean_words": {
+        "pg": 282.17040358744396,
+        "modhuman": 273.85
+      }
+    },
+    "pg_vs_great": {
+      "contrast": "pg_vs_great",
+      "n": 303,
+      "n_groups": 30,
+      "class_counts": {
+        "pg": 223,
+        "great": 80
+      },
+      "prosody_only": 0.9307735426008968,
+      "prosody_ci": [
+        0.8730726529931377,
+        0.9828619963756289
+      ],
+      "prosody_perm_p": 0.000999000999000999,
+      "slop_only": 0.8302970852017937,
+      "combined": 0.9392656950672645,
+      "length_only": 0.6410313901345291,
+      "increment_over_slop": 0.10896860986547086,
+      "increment_ci": [
+        0.05393261899358995,
+        0.16038618003150867
+      ],
+      "mean_words": {
+        "pg": 282.17040358744396,
+        "great": 272.4375
+      }
+    },
+    "modhuman_vs_slop": {
+      "contrast": "modhuman_vs_slop",
+      "n": 160,
+      "n_groups": 91,
+      "class_counts": {
+        "slop": 80,
+        "modhuman": 80
+      },
+      "prosody_only": 0.925,
+      "prosody_ci": [
+        0.8654571928902008,
+        0.9717048199597513
+      ],
+      "prosody_perm_p": 0.000999000999000999,
+      "slop_only": 0.9312499999999999,
+      "combined": 0.96875,
+      "length_only": 0.75625,
+      "increment_over_slop": 0.03750000000000009,
+      "increment_ci": [
+        -0.0003842060451256096,
+        0.07804330616727308
+      ],
+      "mean_words": {
+        "modhuman": 273.85,
+        "slop": 276.6375
+      }
+    }
+  }
+}

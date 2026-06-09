@@ -7,7 +7,7 @@ are reported as diagnostics.
 """
 import argparse, json, os
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
@@ -58,7 +58,7 @@ def main():
     else:
         verdict = "NO-GO (a PROCEED condition failed; not a hard kill)"
     print(f"\nVERDICT: {verdict}")
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(f"\n- PHASE-1b GATE {args.report}: VERDICT={verdict} "
                 f"(H2b.1 great-vs-modhuman resid-vs-SLOP ba={rs['balanced_acc']:.3f} CI_low={rs['ci_low']:.3f} p={rs['perm_p']:.4f}; "
                 + (f"H3-A modhuman-vs-slop ba={ms['balanced_acc']:.3f} CI_low={ms['ci_low']:.3f} p={ms['perm_p']:.4f}" if ms else "modhuman absent") + ")\n")

@@ -1,0 +1,70 @@
+{
+  "n": 160,
+  "n_groups": 91,
+  "n_realizations": 3,
+  "coverage": [
+    {
+      "dir": "passages_para",
+      "n": 160,
+      "missing": 0
+    },
+    {
+      "dir": "passages_para_r2",
+      "n": 160,
+      "missing": 0
+    },
+    {
+      "dir": "passages_para_r3",
+      "n": 160,
+      "missing": 0
+    }
+  ],
+  "length_ratios": [
+    0.992,
+    0.99,
+    0.996
+  ],
+  "prosody": {
+    "ba_original": 0.925,
+    "ba_paraphrased_per_realization": [
+      0.875,
+      0.881,
+      0.906
+    ],
+    "ba_paraphrased_mean": 0.8875000000000001,
+    "drop": 0.03749999999999998
+  },
+  "lexical": {
+    "ba_original": 0.9312499999999999,
+    "ba_paraphrased_per_realization": [
+      0.825,
+      0.781,
+      0.919
+    ],
+    "ba_paraphrased_mean": 0.8416666666666667,
+    "drop": 0.08958333333333324
+  },
+  "difference_in_drops_lexical_minus_prosody": {
+    "mean": 0.052235889578177576,
+    "ci": [
+      0.008934924884724102,
+      0.09839018779488556
+    ]
+  },
+  "lex_drop_ci": [
+    0.05426932066476418,
+    0.12435566860570664
+  ],
+  "pros_drop_ci": [
+    -0.00041799049296201125,
+    0.07566136554240901
+  ],
+  "validity_gates": {
+    "lexical_actually_degraded": true,
+    "length_preserved": true,
+    "coverage_ok": true,
+    "all_ok": true
+  },
+  "verdict": "P6-SUPPORTED",
+  "ai_ceiling_note": "slop side limited to 15 generator-model groups (lars1234 has exactly 15); CI is group-limited on the AI side regardless of passage count"
+}

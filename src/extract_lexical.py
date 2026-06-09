@@ -6,15 +6,15 @@ import pandas as pd
 import spacy
 from lexical_features import lexical_features, LEXICAL_COLS
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="lexical_A.parquet")
+    ap.add_argument("--out", default="results/features/lexical_A.parquet")
     args = ap.parse_args()
 
-    man = pd.read_csv(os.path.join(REPO, "manifest.csv"))
+    man = pd.read_csv(os.path.join(REPO, "data", "manifest.csv"))
     nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
     rows = []
     for i, r in man.iterrows():

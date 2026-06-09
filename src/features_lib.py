@@ -50,8 +50,11 @@ def _entropy(counts):
     return float(-(p * np.log2(p)).sum())
 
 
-def stress_features(words):
-    """Binary stress sequence over syllables -> timing features + spw + oov_rate."""
+def _stress_series(words):
+    """Ordered binary stress sequence (syms) + per-word syllable counts (spw) + oov_rate.
+    SINGLE source of truth: both the summary stats (stress_features) and the order-aware features
+    (sequence_features via ordered_series) consume the EXACT same series, so they cannot diverge.
+    OOV words are dropped from the sequence (a known limit; oov_rate tracks the rate)."""
     syms, spw, oov, tot = [], [], 0, 0
     for w in words:
         tot += 1
@@ -65,6 +68,12 @@ def stress_features(words):
         spw.append(len(st))
         syms.extend(1 if d in "12" else 0 for d in st)
     oov_rate = oov / tot if tot else 0.0
+    return syms, spw, oov_rate
+
+
+def stress_features(words):
+    """Binary stress sequence over syllables -> timing features + spw + oov_rate."""
+    syms, spw, oov_rate = _stress_series(words)
 
     stressed = [i for i, s in enumerate(syms) if s == 1]
     gaps = np.diff(stressed) if len(stressed) >= 2 else np.array([])
@@ -89,14 +98,11 @@ def stress_features(words):
                 spw_mean=spw_mean, spw_var=spw_var, spw_skew=spw_skew, oov_rate=oov_rate)
 
 
-def syntactic_features(doc):
-    """Sentence-length and clause/phrase-boundary spacing from a spaCy Doc."""
+def _syntactic_series(doc):
+    """Ordered sentence-length series (sl) + clause/phrase-gap series (phg) from a spaCy Doc.
+    SINGLE source of truth shared by syntactic_features and ordered_series (see _stress_series)."""
     sl = [sum(1 for t in s if t.is_alpha) for s in doc.sents]
     sl = [x for x in sl if x > 0]
-    sl_arr = np.array(sl, dtype=float)
-    sl_mean = float(sl_arr.mean()) if sl_arr.size else 0.0
-    sl_var = float(sl_arr.var()) if sl_arr.size else 0.0
-    sl_cv = float(sl_arr.std() / sl_arr.mean()) if (sl_arr.size and sl_arr.mean() > 0) else 0.0
 
     phg, gap = [], 0
     for t in doc:
@@ -107,6 +113,17 @@ def syntactic_features(doc):
             phg.append(gap)
             gap = 0
     phg = [g for g in phg if g > 0]
+    return sl, phg
+
+
+def syntactic_features(doc):
+    """Sentence-length and clause/phrase-boundary spacing from a spaCy Doc."""
+    sl, phg = _syntactic_series(doc)
+    sl_arr = np.array(sl, dtype=float)
+    sl_mean = float(sl_arr.mean()) if sl_arr.size else 0.0
+    sl_var = float(sl_arr.var()) if sl_arr.size else 0.0
+    sl_cv = float(sl_arr.std() / sl_arr.mean()) if (sl_arr.size and sl_arr.mean() > 0) else 0.0
+
     ph_arr = np.array(phg, dtype=float)
     ph_mean = float(ph_arr.mean()) if ph_arr.size else 0.0
     ph_var = float(ph_arr.var()) if ph_arr.size else 0.0
@@ -159,3 +176,14 @@ def extract_features(text, nlp, tier="A"):
     if tier == "B":
         feats.update(metrical_tension(doc, nlp))
     return feats
+
+
+def ordered_series(text, nlp):
+    """The four ordered rhythmic series used by the order-aware features (sequence_features).
+    Built from the SAME primitives as the summary stats so order and histogram features cannot
+    disagree about the underlying signal. Returns dict(SL=, SPW=, SYMS=, PHG=) (python lists)."""
+    doc = nlp(text)
+    words = [t.text for t in doc if t.is_alpha]
+    syms, spw, _ = _stress_series(words)
+    sl, phg = _syntactic_series(doc)
+    return dict(SL=sl, SPW=spw, SYMS=syms, PHG=phg)

@@ -1,0 +1,45 @@
+{
+  "smoke": false,
+  "n": 320,
+  "contrasts": {
+    "modhuman_vs_slop": {
+      "n": 160,
+      "n_groups": 91,
+      "stress": 0.925,
+      "prominence": 0.925,
+      "stress_plus_prom": 0.925,
+      "lexical": 0.931,
+      "prom_minus_stress": 0.0,
+      "prom_minus_stress_CI": [
+        -0.049,
+        0.045
+      ]
+    },
+    "modhuman_vs_gpt4o": {
+      "n": 160,
+      "n_groups": 156,
+      "stress": 0.838,
+      "prominence": 0.819,
+      "stress_plus_prom": 0.881,
+      "lexical": 0.906,
+      "prom_minus_stress": -0.019,
+      "prom_minus_stress_CI": [
+        -0.08,
+        0.04
+      ]
+    },
+    "great_vs_modhuman": {
+      "n": 160,
+      "n_groups": 88,
+      "stress": 0.756,
+      "prominence": 0.825,
+      "stress_plus_prom": 0.787,
+      "lexical": 0.762,
+      "prom_minus_stress": 0.069,
+      "prom_minus_stress_CI": [
+        0.0,
+        0.147
+      ]
+    }
+  }
+}

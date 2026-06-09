@@ -1,14 +1,31 @@
+# Secrets — NEVER commit (GPU SSH key + access details live here)
+.secrets/
+*.pem
+*_ed25519
+id_*
+
 # Python
 .venv/
 __pycache__/
 *.pyc
 .pytest_cache/
 
-# Regenerable caches / downloads
-texts/
+# Regenerable caches / downloads (raw source texts)
+data/texts/
 
 # OS
 .DS_Store
 
 # Phase-1c pristine pre-normalization backup (recoverable from first commit)
 data/passages_raw/
+
+# ZuCo raw + parsed reading data (regenerable from OSF)
+data/zuco/
+
+# Tweet assets (aesthetic process/terminal images) — local only
+twit/
+
+# Paraphrase + 2nd-source derived data (Z2, regenerable)
+data/passages_para*/
+data/passages_gpt4o*/
+data/manifest_gpt4o.csv

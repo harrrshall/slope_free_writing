@@ -23,7 +23,7 @@ import os, shutil, sys
 import pandas as pd
 from typography import normalize_typography
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASS = os.path.join(REPO, "data", "passages")
 RAW = os.path.join(REPO, "data", "passages_raw")
 
@@ -46,7 +46,7 @@ def main():
     # 2) rewrite every .txt in place; ALWAYS read the pristine source (RAW if present)
     #    so re-running is deterministic and never double-normalizes.
     src_root = RAW if os.path.isdir(RAW) and not dry else PASS
-    man = pd.read_csv(os.path.join(REPO, "manifest.csv"))
+    man = pd.read_csv(os.path.join(REPO, "data", "manifest.csv"))
     changed, total, char_updates = 0, 0, {}
     for _, r in man.iterrows():
         rel = os.path.join(r["class"], r["passage_id"] + ".txt")
@@ -70,7 +70,7 @@ def main():
     # 3) refresh manifest char_len (only column made stale by re-cleaning).
     if not dry:
         man["char_len"] = man["passage_id"].map(char_updates).fillna(man["char_len"]).astype(int)
-        man.to_csv(os.path.join(REPO, "manifest.csv"), index=False)
+        man.to_csv(os.path.join(REPO, "data", "manifest.csv"), index=False)
         print("[typo] refreshed manifest.csv char_len")
     print("[typo] DONE. Re-extract features then re-run evaluate.py on the unchanged split.")
 

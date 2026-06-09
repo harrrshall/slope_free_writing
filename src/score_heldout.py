@@ -16,7 +16,7 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.inspection import permutation_importance
 from features_lib import PROSODY_COLS, TIER_B_COLS, FEATURE_GROUPS, RHYTHM_GROUPS
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def bootstrap_ci(y, pred, n=2000, seed=0):
@@ -78,7 +78,7 @@ def run_p1_heldout(features, lexical, split_path, out):
     res["great_vs_slop_slopresid"] = resid_pair("great", "slop")
     json.dump(res, open(os.path.join(REPO, out), "w"), indent=2)
     print("[heldout-p1]", json.dumps({k: (round(v["ba"], 3) if v else None) for k, v in res.items()}))
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write("\n- P1 HELD-OUT (once): " + ", ".join(
             f"{k} ba={v['ba']:.3f} CI[{v['ci_low']:.3f},{v['ci_high']:.3f}]" for k, v in res.items() if v) + "\n")
     return res

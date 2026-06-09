@@ -1,0 +1,35 @@
+{
+  "label": "z2B_gpt4o_backtrans",
+  "classes": [
+    "modhuman",
+    "gpt4o"
+  ],
+  "group_by": "source_id",
+  "n": 160,
+  "n_groups": 156,
+  "length_ratio": 0.853,
+  "prosody": {
+    "ba_orig": 0.838,
+    "ba_para": 0.713,
+    "drop": 0.125
+  },
+  "lexical": {
+    "ba_orig": 0.906,
+    "ba_para": 0.787,
+    "drop": 0.119
+  },
+  "diff_in_drops": {
+    "mean": -0.008,
+    "ci": [
+      -0.085,
+      0.068
+    ]
+  },
+  "validity": {
+    "lex_degraded": true,
+    "length_ok": true,
+    "coverage_n": 160,
+    "all_ok": true
+  },
+  "verdict": "P6-NOT-SUPPORTED"
+}

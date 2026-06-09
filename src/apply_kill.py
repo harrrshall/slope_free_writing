@@ -7,7 +7,7 @@ frozen 'PROCEED iff ALL', we do not advance (functionally a non-validation).
 """
 import argparse, json, os
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
@@ -59,7 +59,7 @@ def main():
         print(f"  [{'TRIGGERED' if v else 'ok'}] {k}")
     print(f"\nVERDICT: {verdict}")
 
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(f"\n- GATE {args.report}: VERDICT={verdict} "
                 f"(ba={ba:.3f}, CI_low={ci_low:.3f}, perm_p={p:.4f}, delta={delta:+.3f}, "
                 f"resid_low={resid_low:.3f}, era={era:.3f})\n")

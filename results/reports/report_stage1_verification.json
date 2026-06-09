@@ -1,0 +1,49 @@
+{
+  "verdict": "KILL-robust",
+  "workflow": "wzs5gdntm",
+  "n_verifiers": 4,
+  "verifiers_agreeing": 4,
+  "reproduced_to_6dp": true,
+  "false_kill_bug_found": false,
+  "reproduced_ba": {
+    "summary": 0.786954,
+    "summary_plus_order": 0.771329,
+    "summary_plus_order_shuffled": 0.755952,
+    "order_only": 0.606027,
+    "order_only_shuffled": 0.613715
+  },
+  "gates": {
+    "PRIMARY_1_lift_over_histograms": {"increment": -0.0156, "ci": [-0.0784, 0.0424], "pass": false},
+    "PRIMARY_2_order_real_vs_shuffled_single_md5": {"increment": 0.0154, "ci": [-0.0823, 0.1188], "pass": false},
+    "PRIMARY_2_multiseed_40": {"increment": 0.027, "ci": [-0.072, 0.129], "real_percentile_in_shuffle_dist": "70-95th", "point_p": "<0.001", "pass": false},
+    "PRIMARY_3_orthogonality": {"resid_slop_ba": 0.661, "perm_p": 0.003, "increment_over_slop": 0.031, "ci": [-0.049, 0.112], "summary_only_increment": 0.102, "pass": false}
+  },
+  "decisive_binding_test": {
+    "order_residualized_against_summary_histograms_ba": 0.551,
+    "shuffled_order_residualized_ba": 0.567,
+    "conclusion": "order is fully redundant with the summary histograms (residual at chance, below the residualized shuffle)"
+  },
+  "rescue_attempts": {
+    "models_tried": ["logreg", "RandomForest", "GradientBoosting", "HistGradientBoosting", "pairwise-interactions"],
+    "best_honest_order_increment": {"model": "HGB real-minus-shuffle", "increment": 0.047, "ci": [-0.004, 0.107]},
+    "pairwise_interactions_increment": {"increment": -0.071, "ci": [-0.143, -0.006]},
+    "cv_seed_robustness": "PRIMARY-1 negative in 10/10 seeds (mean -0.032)",
+    "per_feature_welch_t_great_vs_modhuman": {"sl_bvr": {"t": 2.68, "p": 0.009}, "phg_ac1": {"t": 2.40, "p": 0.018}, "note": "none survive Bonferroni alpha=0.005"},
+    "any_clears_ci_lower_bound_above_0": false
+  },
+  "integrity": {
+    "series_reconstruction_abs_diff": 0.0,
+    "shuffle_genuine_mean_abs_real_minus_shuf_range": [0.079, 3.189],
+    "order_cols_degenerate": false,
+    "dev_heldout_overlap": 0,
+    "heldout_scored": false,
+    "ordered_series_matches_summary_stat_series": true
+  },
+  "limits": [
+    "kills ORDER of the existing dictionary-stress/sentence-length series, NOT the per-unit VALUES (Helsinki/CWT label-quality axis still open)",
+    "real order carries a tiny genuine signal (+0.027 point) but it is swamped by group-level CIs and redundant with the histograms",
+    "power-limited: 70 source groups + n=127 give CIs ~+/-0.10, too wide to resolve a ~0.03 effect",
+    "contrast is amateur-Reddit vs old-classics (register/era confounded) — the deeper data limiter"
+  ],
+  "next_step": "Do not build CWT/learned-sequence on these hand series (M9). Open levers: (a) speech-grounded per-unit prominence VALUES (Helsinki, EXTRACTION_UPGRADE_PLAN Stage 2), (b) learned-representation ceiling probe (D14), (c) higher-ceiling/higher-power within-genre/era dataset. Held-out stays quarantined."
+}

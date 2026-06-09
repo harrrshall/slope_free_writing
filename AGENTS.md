@@ -20,8 +20,14 @@ If you ever feel tension between "make progress" and "be honest about a negative
 ## 1. Goal hierarchy
 
 - **North Star (the big goal):** find a *better reward model for writing quality* — one that, used in RLHF/preference optimization, produces **slop-free writing** without collapsing diversity. This is the problem the whole project serves.
-- **Current milestone (the instant goal):** determine whether **text-derived prosody / implicit-prosody features** ("the music of prose") carry a real, separable signal of writing quality that the standard lexical/semantic reward models miss — and if so, turn it into a complementary reward term.
-- **How to find today's task:** open `docs/METHODOLOGY.md`, find the lowest-numbered phase whose exit criteria are not yet met, and work the next unchecked step in it. Do not skip phases. Phase 0 (the separation pre-test) gates everything.
+- **Prosody probe — ANSWERED (2026-06-08).** Whether text-derived prosody carries a separable writing-quality signal is settled: **real but weak.** It separates human prose from *weaker* AI and tracks register/era, but is a poor within-human quality ranker, and its AI-detection edge degrades as models improve. We ruled out the classifier (D14), the feature order (F3), and — for detection — the extraction front-end (F7) as the cause. Full arc with numbers in `docs/SYNTHESIS.md` (findings F1–F7). So prosody is at most **one minor, complementary term**, never a standalone reward (DECISIONS D14).
+- **Current direction (the instant goal, 2026-06-08):** build and test a **composite, interpretable writing-quality reward** — prosody (one weak term) + discourse coherence + lexical anti-slop — used *inside* a **diversity-preserving optimizer** (DivPO / DPH-RL forward-KL / QEMPO / GFlowNet), to reduce slop without collapsing diversity. **A verified literature survey (`docs/RELATED_WORK.md`) found this specific combination is novel:** the two halves each exist (DivPO etc. for diversity; LongWriter-Zero's composite writing reward) but no one wires a *hand-designed composite prose reward* into a *diversity-preserving* optimizer. The closest prior art, **DARLING** (arXiv:2509.02534), uses a *learned* quality + *learned* diversity signal — not an interpretable composite. **Read `docs/RELATED_WORK.md` before any prior-art search on this — do not re-research it.**
+- **The crux to settle first:** does the prosody term add measurable signal *on top of* a strong learned reward model, given it is real-but-weak? If not, the "composite incl. prosody" framing loses its point. The strongest next *new* signal to run through the existing gauntlet is **discourse coherence** (the "good for 3 lines then collapses" failure mode), which is likely stronger than prosody for both quality and AI-detection.
+- **How to find today's task:** start from `docs/SYNTHESIS.md` (where we are) and `docs/RELATED_WORK.md` (what's already been done), then advance the current direction. `docs/METHODOLOGY.md` holds the original phased plan; Phase 0 (the separation pre-test) still gates any *new* candidate signal before it earns a reward term.
+
+### Research stance — exploration over application (read this before proposing a "solution")
+
+This is open-ended, discovery-driven research. The objective is to find something *genuinely new* that serves the North Star, not to apply a predefined or standard solution. We do **not** start from the assumption that the answer must be a conventional reward signal, a particular model family, or any off-the-shelf method. If a standard/existing approach turns out to work well on the evidence, we are free to adopt it; but adoption is an outcome that must be *earned by results*, never the starting goal. Prefer the experiment that could teach us something surprising over the one that merely confirms a default, and when a result points somewhere unplanned, follow it (and log it). Prosody is the current probe, not the destination; the destination is whatever the evidence reveals.
 
 ---
 
@@ -35,12 +41,30 @@ Every document and its path. Know what each is for:
 | Human overview | `README.md` | Orientation for a human reader. |
 | Goals & hypotheses | `docs/RESEARCH_GOAL.md` | North Star, hypotheses, success + kill criteria. |
 | Verified background | `docs/BACKGROUND.md` | What is already known/published. Prevents reinventing or overclaiming novelty. |
+| Related work | `docs/RELATED_WORK.md` | Verified literature survey for the composite-reward + diversity-preserving direction. **Read before re-researching prior art.** |
 | Plan | `docs/METHODOLOGY.md` | Phased experimental plan with entry/exit criteria. |
 | Experiment log | `docs/EXPERIMENT_LOG.md` | Dated, append-only record of *every* run, command, and observation. |
 | Findings | `docs/FINDINGS.md` | Distilled, *validated* conclusions only. |
+| Synthesis | `docs/SYNTHESIS.md` | Consolidated findings F1–F7 and the honest bottom line. **Read first for "where we are".** |
 | Mistakes | `docs/MISTAKES.md` | Anti-patterns and lessons. Read before acting; append after any error. |
 | Decisions | `docs/DECISIONS.md` | Why we chose what we chose (ADR-style), so choices aren't silently re-litigated. |
 | Environment | `docs/ENVIRONMENT.md` | Setup, libraries, data sources, exact commands. |
+| Active plan | `docs/EXTRACTION_UPGRADE_PLAN.md` | Current experimental arc (is the bottleneck the signal or the extraction?). |
+
+### Repository layout (adopted 2026-06-08, DECISIONS D15)
+
+```
+AGENTS.md  README.md  .gitignore  pytest.ini
+docs/      all research markdown (this table)
+src/       Python modules + scripts — run as `.venv/bin/python3 src/<name>.py`
+tests/     pytest suite — run as `.venv/bin/python -m pytest`
+data/      inputs: manifest.csv, slop_lists/, passages/, passages_raw/, texts/
+results/   generated artifacts, grouped: features/ (*.parquet) · reports/ (*report*.json) · splits/ (quarantine_split*.json)
+```
+
+Scripts re-anchor `REPO` to the repo root (`dirname(dirname(__file__))`), so every data/artifact
+path resolves from the root. Generated outputs default into `results/`; the experiment log written
+by scripts is `docs/EXPERIMENT_LOG.md`. Do not relocate without updating the path constants and logging it.
 
 ### The work loop — follow it every task, no exceptions
 
@@ -102,7 +126,7 @@ These are the easy-to-make, hard-to-notice errors specific to *this* idea:
 
 Full setup in `docs/ENVIRONMENT.md`. Essentials:
 
-- Python ≥ 3.9. Install packages into the project virtualenv `.venv` (user requirement), NOT with `--break-system-packages`: `python3 -m venv .venv && .venv/bin/pip install <pkg>`. Run every script with `.venv/bin/python3`. See `ENVIRONMENT.md` §1.
+- Python ≥ 3.9. Install packages into the project virtualenv `.venv` (user requirement), NOT with `--break-system-packages`: `python3 -m venv .venv && .venv/bin/pip install <pkg>`. Run scripts as `.venv/bin/python3 src/<name>.py` and the test suite as `.venv/bin/python -m pytest`. See `docs/ENVIRONMENT.md` §1.
 - Core libraries: `prosodic` (metrical/scansion + stress), `pronouncing` (CMUdict stress patterns), `cmudict`, `nltk`, `spacy` (sentence/clause segmentation). `eSpeak` is needed by `prosodic` for out-of-dictionary words.
 - Data: human prose from Project Gutenberg; AI/flat prose from the slop-forensics / EQ-Bench creative-writing corpora. See `docs/ENVIRONMENT.md` for sources.
 - **Programmatic check before declaring any phase done:** the phase's exit criteria in `docs/METHODOLOGY.md` are all checked, and `docs/EXPERIMENT_LOG.md` contains the runs that justify them.

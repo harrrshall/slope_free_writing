@@ -128,4 +128,18 @@ reasoning that motivated this project. Treat them as live warnings, not history.
   state mechanisms only to the precision the evidence supports, and have an adversarial pass check the
   WORDING against the numbers, not just the numbers.
 
-_Append new lessons below as M15, M16, … with the same what/why → rule format._
+### M15 — A single shuffle/permutation realization is an under-powered null; integrate the seed lottery
+- **What/why:** Stage 1's PRIMARY-2 (order REAL vs SHUFFLED) used ONE md5-per-passage shuffle realization.
+  Its group-bootstrap CI was so wide (±0.10) that the single point (+0.015) could neither confirm nor refute
+  the order claim. Adversarial verification over 20–40 shuffle seeds showed the per-realization increment is
+  a seed-driven coin flip: one verifier's 20-seed draw landed real at the 55th percentile (p=0.10, "collapses
+  to zero"), while the 40-seed / 3-scheme redo put real at the 70–95th percentile (p<0.001, "small real
+  signal"). Both are right about their sample; a single seed is just noisy. The KILL survived only because the
+  *decisive* gate was the residual-redundancy test, not the single-shuffle increment.
+- **Rule now:** when a control destroys structure by random permutation (shuffle controls, label perms,
+  negative-control features), NEVER judge on one realization. Draw K≥20 seeds and integrate the seed variance
+  into the reported CI (or report the percentile of REAL within the shuffled distribution). Pre-register the
+  multi-seed null, not a single draw. A wide single-realization CI is an under-powered test, not evidence of
+  absence.
+
+_Append new lessons below as M16, M17, … with the same what/why → rule format._

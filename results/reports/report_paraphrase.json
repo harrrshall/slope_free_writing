@@ -1,0 +1,42 @@
+{
+  "n": 160,
+  "n_groups": 91,
+  "coverage": {
+    "n_para": 160,
+    "n_missing": 0,
+    "missing": []
+  },
+  "mean_para_to_orig_length_ratio": 0.9917159874808281,
+  "prosody": {
+    "ba_original": 0.925,
+    "ba_paraphrased": 0.875,
+    "drop": 0.050000000000000044
+  },
+  "lexical": {
+    "ba_original": 0.9312499999999999,
+    "ba_paraphrased": 0.825,
+    "drop": 0.10624999999999996
+  },
+  "difference_in_drops_lexical_minus_prosody": {
+    "mean": 0.05648787432672369,
+    "ci": [
+      -0.00274286940425186,
+      0.11483449663874108
+    ]
+  },
+  "lex_drop_ci": [
+    0.06273145008138907,
+    0.15001506024096378
+  ],
+  "pros_drop_ci": [
+    0.0075167973785016055,
+    0.10014729246656949
+  ],
+  "validity_gates": {
+    "lexical_actually_degraded": true,
+    "length_preserved": true,
+    "coverage_ok": true,
+    "all_ok": true
+  },
+  "verdict": "P6-NOT-SUPPORTED"
+}

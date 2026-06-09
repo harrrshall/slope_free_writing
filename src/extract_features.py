@@ -10,7 +10,7 @@ import pandas as pd
 import spacy
 from features_lib import extract_features, PROSODY_COLS, TIER_B_COLS
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
-    man = pd.read_csv(os.path.join(REPO, "manifest.csv"))
+    man = pd.read_csv(os.path.join(REPO, "data", "manifest.csv"))
     nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
     rows = []
@@ -41,7 +41,7 @@ def main():
         bad = df.loc[~np.isfinite(df[cols + ["mattr"]]).all(axis=1), "passage_id"].tolist()
         raise SystemExit(f"[features] FATAL NaN/inf in: {bad[:10]}")
 
-    out = os.path.join(REPO, args.out or f"features_{args.tier}.parquet")
+    out = os.path.join(REPO, args.out or f"results/features/features_{args.tier}.parquet")
     df.to_parquet(out, index=False)
     print(f"[features] wrote {out}  shape={df.shape}  cols={cols}")
     print("[features] per-class means (main band):")

@@ -12,7 +12,7 @@ import numpy as np
 import pronouncing
 from features_lib import mattr as _mattr, PROSODY_COLS
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SLOP_DIR = os.path.join(REPO, "data", "slop_lists")
 
 LEXICAL_COLS = [

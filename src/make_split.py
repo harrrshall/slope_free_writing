@@ -11,13 +11,13 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def carry_forward(prev_path, out_path):
     """Keep Phase-0 held-out/dev membership FIXED; assign NEW classes group-aware. Asserts the p1
     held-out is a superset of the Phase-0 held-out and that no source_id crosses dev/held-out."""
-    man = pd.read_csv(os.path.join(REPO, "manifest.csv"))
+    man = pd.read_csv(os.path.join(REPO, "data", "manifest.csv"))
     main_df = man[man.band == "main"].reset_index(drop=True)
     prev = json.load(open(os.path.join(REPO, prev_path)))
     prev_held, prev_dev = set(prev["held_out"]), set(prev["dev"])
@@ -49,7 +49,7 @@ def carry_forward(prev_path, out_path):
     held_df = md.loc[[i for i in held if i in md.index]]
     counts = held_df["class"].value_counts().to_dict()
     print(f"[carry] wrote {out_path}: held-out n={len(held)} by class={counts}; dev n={len(dev)}")
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(f"\n- P1 carry-forward split {out_path}: held-out by class={counts}, "
                 f"total held={len(held)}, dev={len(dev)}; group overlap=empty; superset of Phase-0 held-out=OK.\n")
 
@@ -58,11 +58,11 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--carry-forward", default=None, dest="carry")
-    ap.add_argument("--out", default="quarantine_split.json")
+    ap.add_argument("--out", default="results/splits/quarantine_split.json")
     args = ap.parse_args()
     if args.carry:
         return carry_forward(args.carry, args.out)
-    man = pd.read_csv(os.path.join(REPO, "manifest.csv"))
+    man = pd.read_csv(os.path.join(REPO, "data", "manifest.csv"))
     main_df = man[man.band == "main"].reset_index(drop=True)
     y = main_df["class"].to_numpy()
     groups = main_df["source_id"].to_numpy()
@@ -90,7 +90,7 @@ def main():
 
     dev_idx, held_idx = chosen
     split = {"held_out": ids[held_idx].tolist(), "dev": ids[dev_idx].tolist()}
-    with open(os.path.join(REPO, "quarantine_split.json"), "w") as f:
+    with open(os.path.join(REPO, "results", "splits", "quarantine_split.json"), "w") as f:
         json.dump(split, f, indent=2)
 
     held = main_df.iloc[held_idx]
@@ -107,7 +107,7 @@ def main():
     line = (f"\n- Held-out n per class (filled at P0.3): "
             f"great={held_counts.get('great',0)}, flat={held_counts.get('flat',0)}, "
             f"slop={held_counts.get('slop',0)}; total held-out={len(held_idx)}, dev={len(dev_idx)}.\n")
-    with open(os.path.join(REPO, "EXPERIMENT_LOG.md"), "a") as f:
+    with open(os.path.join(REPO, "docs", "EXPERIMENT_LOG.md"), "a") as f:
         f.write(line)
     print("[split] wrote quarantine_split.json and logged held-out n/class")
 
