@@ -5,7 +5,7 @@ the cadence a reader hears internally while reading silently  can serve as a rew
 signal for writing quality, complementing the lexical and semantic reward models used
 in RLHF.
 
-## tdlr
+## tldr
 
 LLMs have surged at math and code because those domains have *verifiable rewards*. Writing
 has no verifier, and the usual substitute  an LLM-as-judge  is biased toward the bland,
