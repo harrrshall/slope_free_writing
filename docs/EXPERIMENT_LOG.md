@@ -319,3 +319,68 @@ OVERALL Phase-1b PROCEED iff H2 PROCEED AND H3 PROCEED. chance=0.50.
 - great-vs-modhuman (QUALITY): STRESS 0.756, PROMINENCE 0.825, prom-stress **+0.069 CI[0.000,0.147]** -> prominence IMPROVES the within-human quality contrast; CI lower bound grazes 0 (BORDERLINE, like the F5 near-miss). Notably PROMINENCE 0.825 > lexical 0.762 on the quality contrast.
 - VERDICT (per pre-reg, honest): for the AI-DETECTION / origin axes (F2, F6) -> EXTRACTION IS NOT THE BOTTLENECK; dictionary stress was not the limiter; the signal is genuinely weak / GPT-4o genuinely human-like. CLOSED. For the within-human QUALITY axis -> a REAL but BORDERLINE positive (+0.069, CI grazes 0): the user's "is it the extraction?" instinct gets PARTIAL support, specifically on quality. The first evidence that a richer per-unit signal nudges the quality contrast up.
 - CAVEATS (honest): quality CI grazes 0 (not decisively significant); great = 10 source books (few groups -> wide CI, the chronic power limit); raw accuracy not the residualized-against-lexical binding number; prominence model trained on LibriTTS audiobook register (read-aloud) -> may not fully transfer. -> FINDINGS F7. NEXT: power up the quality near-miss (more great-book groups / the residualized binding test) to see if +0.069 clears 0.
+
+## 2026-06-09 — PRE-REGISTRATION: Crux test (does prosody add over a FRONTIER JUDGE?)
+
+Motivation (AGENTS.md current direction): a real writing reward is built on a strong judge/RM, not on
+lexical n-grams. F2 showed prosody adds +0.102 over a LEXICAL baseline; the real bar is a strong quality
+signal. If prosody adds nothing over a frontier judge, it does not belong in the composite reward (drop it,
+pivot to coherence). If it adds, prosody catches a blind spot the judge has -> it belongs.
+
+HYPOTHESIS (H): On great-vs-modhuman (within-human quality), text-prosody (PROSODY_COLS) carries quality
+signal a frontier LLM judge does NOT already capture: adding prosody to the judge score improves separation.
+
+JUDGE (the strong baseline): Gemini 2.5 Pro rates OVERALL prose quality (+craft/coherence/imagery) 1-10.
+Anti-cheating: prompt NEVER mentions rhythm/cadence/prosody/meter; blind to class/source/era/human-vs-AI;
+temp=0, cached. Primary baseline = judge_overall; robustness baseline = all 4 judge dims.
+
+DESIGN (reuses validated evaluate.py gauntlet, no new stats code): group-aware StratifiedGroupKFold by
+source_id. Baseline = judge-only logreg; test = judge+prosody logreg. Prosody = PROSODY_COLS only (no
+lexical/mattr, D11). DEV used for the binding test; held-out scored EXACTLY ONCE as confirmation.
+
+BINDING METRIC: increment in balanced accuracy of (judge+prosody) over (judge-only) on DEV, paired
+group-bootstrap CI. Secondary: prosody residualized against the judge score (perm test).
+
+KILL CRITERION (frozen before result): if the increment group-bootstrap CI includes 0 on DEV, prosody is
+REDUNDANT with the frontier judge -> drop prosody from the composite-incl-prosody direction. SUPPORTED iff
+increment CI lower bound > 0 on DEV AND it replicates on the held-out.
+
+REPORTED FOR TRANSPARENCY: ba_judge_only (baseline strength), ba_prosody_only, ba_judge_plus_prosody.
+CONFOUND NOTE: great=classics vs modhuman=amateur (era/register). The judge absorbs most of that into the
+baseline, so the INCREMENT is the clean "what prosody adds beyond a strong holistic judge" quantity; but
+prosody's increment could still carry residual era signal -> note, do not overclaim.
+
+### 2026-06-09 — Crux test AMENDMENT (after adversarial design audit, BEFORE any result)
+
+A 2-agent adversarial audit found 2 showstoppers + validity gaps. Hardened the design before running (M7:
+criteria frozen pre-result; amendments logged with reason):
+
+- BUG FIX (would crash + mislabel): judge-residualization now calls lexical_residualized_prosody(prosody,
+  judge_cols) DIRECTLY. The old h2_contrast reuse residualized against SLOP_BASELINE_COLS, which are ABSENT
+  from the crux frame -> empty matrix -> StandardScaler crash, and would have mislabeled the metric.
+- STRONGER JUDGE BASELINE (give the judge its fairest shot, so prosody faces the highest bar): judge rates on
+  a 1-100 scale across 4 dims (overall/craft/coherence/imagery); PRIMARY baseline = the 4-dim judge vector,
+  not judge_overall alone (coarse 1-10 integers depressed the baseline by quantization).
+- JUDGE-STRENGTH FLOOR: the test is INFORMATIVE only if ba_judge_only >= 0.70 (~ the lexical baseline 0.73 on
+  this contrast, Phase 1c). Below that the judge is too weak and the result is VOID, not a prosody win.
+- ERA-CONFOUND CONTROL (the key validity fix): PRIMARY binding moved to the WITHIN-ERA contrast
+  modgreat-vs-modhuman (both modern -> era-clean quality). Added great-vs-modgreat as an ERA CONTROL (if
+  prosody adds over the judge there, any great-vs-modhuman increment is residual ERA, not quality).
+  great-vs-modhuman kept only for comparison with F2.
+- POWER HONESTY: great=10, modgreat=6 source groups -> low power. A CI-including-0 with upper bound > +0.03 is
+  INCONCLUSIVE (underpowered), NOT a clean redundancy KILL; "REDUNDANT" only if upper CI < +0.03.
+- HELD-OUT: scored ONLY if the DEV primary ADDS; scored once; DIRECTIONAL ONLY (held-out great/modgreat = 2
+  groups each, so it is not confirmatory power).
+- M15 (no single-draw): judge scored with 2 realizations (temp 0.5), averaged; per-realization ba spread
+  reported as a stability check.
+- Coverage assertion: crux fails loudly if judge scores do not cover every selected passage.
+
+REVISED VERDICT LOGIC: per contrast -> VOID (ba_judge<0.70) | ADDS (incr CI low>0) | REDUNDANT (incr CI
+high<+0.03) | INCONCLUSIVE (underpowered). Quality claim requires: primary (modgreat-vs-modhuman) ADDS AND
+era control (great-vs-modgreat) does NOT ADD.
+
+## 2026-06-09 - Crux test RESULT (prosody beyond a frontier judge): NO clean quality signal beyond the judge (primary: REDUNDANT (judge captures it))
+- PRIMARY: within-era quality (era-clean) [modgreat_vs_modhuman n=126 groups={'modgreat': 6, 'modhuman': 60}]: ba_judge=0.992 ba_pros=0.634 ba_judge+pros=0.984 | increment=-0.008 CI[-0.025,0.000] | resid-vs-judge ba=0.379 p=1.0000 -> REDUNDANT (judge captures it)
+- CONTROL: era (prosody adding here => era not quality) [great_vs_modgreat n=125 groups={'great': 10, 'modgreat': 6}]: ba_judge=0.447 ba_pros=0.656 ba_judge+pros=0.584 | increment=+0.137 CI[-0.086,0.317] | resid-vs-judge ba=0.697 p=0.0280 -> VOID (judge too weak: ba_judge=0.447<0.7)
+- COMPARE: original F2 (quality+era confounded) [great_vs_modhuman n=127 groups={'great': 10, 'modhuman': 60}]: ba_judge=0.992 ba_pros=0.787 ba_judge+pros=0.976 | increment=-0.016 CI[-0.040,0.000] | resid-vs-judge ba=0.472 p=0.9051 -> REDUNDANT (judge captures it)
+- held-out (modgreat-vs-modhuman): DEV primary did not ADD; held-out NOT touched (M7)

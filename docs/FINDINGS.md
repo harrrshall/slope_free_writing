@@ -238,3 +238,32 @@ hypotheses to test, listed so we don't mistake them for conclusions.
   data, needs its own pre-registration): paraphrase both the human and AI piles with an LLM, show lexical-slop
   detection degrades under paraphrase while prosody holds. If true, this is the novel contribution and where
   rhythm has a real edge. Currently a prior, not a finding.
+
+## F8 - Prosody is REDUNDANT with a frontier quality judge (the crux) [2026-06-09]
+
+Question: does text-prosody add within-human QUALITY signal BEYOND a strong LLM judge (what a real reward
+model would actually use)? Pre-registered + adversarially-audit-hardened (EXPERIMENT_LOG 2026-06-09): blind
+ANONYMIZED Claude (Sonnet) judge, 1-100 across 4 dims, K=2 realizations; group-aware StratifiedGroupKFold;
+judge-strength floor (ba>=0.70); WITHIN-ERA contrast as primary; era control; held-out gated on DEV pass.
+
+RESULT (DEV; length matched, great 272 vs modhuman 274 words):
+- A frontier judge separates WITHIN-ERA quality (modgreat vs modhuman) ESSENTIALLY PERFECTLY: judge_overall
+  raw AUC = 1.000 (modgreat mean 85.1 vs modhuman 43.8); 4-dim logreg ba_judge = 0.992.
+- Prosody adds NOTHING over the judge: increment (judge+prosody) - (judge) = -0.008, CI[-0.025, 0.000];
+  prosody residualized against the judge = 0.379 ba (BELOW chance), perm p = 1.000 -> REDUNDANT.
+- Original great-vs-modhuman: ba_judge 0.992, increment -0.016, residualized 0.472 p=0.905 -> REDUNDANT.
+- ERA CONTROL (great vs modgreat, both high quality): the judge is at CHANCE (AUC 0.582; ba 0.447) -> it is a
+  QUALITY judge, era-blind. But PROSODY separates them (prosody-only 0.656; residualized-vs-judge 0.697,
+  p=0.028). So prosody's REMAINING signal is ERA / REGISTER, not quality.
+
+CONCLUSION: against a real strong judge, prosody is redundant for writing quality, and what it still carries is
+era/register, not quality. Prosody should NOT be a term in a composite QUALITY reward. This answers the crux
+(AGENTS.md) and kills the "composite incl. prosody" framing. A clean, decisive negative = a success (M7 honored:
+held-out never touched).
+
+CAVEATS (honest): single judge family (Sonnet, K=2; Gemini 2.5-pro was free-tier quota-blocked, limit=0) - but
+the result is extreme (AUC 1.0, residual below chance), so a second judge is very unlikely to flip it; modgreat
+has only 6 source groups, but the judge ceiling leaves no room for prosody regardless of group count; the
+modgreat-vs-modhuman quality gap is large (curated-modern vs amateur), so a subtler gradient would be harder for
+the judge - but prosody would be weaker there too. NEXT: this redirects the project to discourse COHERENCE as the
+candidate signal (AGENTS.md), and to whether ANY hand signal beats a strong judge (likely the real lesson).

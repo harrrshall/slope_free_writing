@@ -1,0 +1,80 @@
+{
+  "pre_reg": "EXPERIMENT_LOG 2026-06-09 (+ amendment)",
+  "floor": 0.7,
+  "redundant_upper": 0.03,
+  "judge_baseline": [
+    "judge_overall",
+    "judge_craft",
+    "judge_coherence",
+    "judge_imagery"
+  ],
+  "DEV": {
+    "modgreat_vs_modhuman": {
+      "contrast": "modgreat_vs_modhuman",
+      "n": 126,
+      "groups_per_class": {
+        "modgreat": 6,
+        "modhuman": 60
+      },
+      "ba_judge_only": 0.9921875,
+      "ba_prosody_only": 0.6343245967741935,
+      "ba_judge_plus_prosody": 0.9841229838709677,
+      "increment": -0.008064516129032251,
+      "increment_ci": [
+        -0.025000000000000022,
+        0.0
+      ],
+      "increment_mean": -0.007704054738633177,
+      "prosody_resid_judge_ba": 0.3787802419354839,
+      "prosody_resid_judge_perm_p": 1.0,
+      "status": "REDUNDANT (judge captures it)",
+      "note": "PRIMARY: within-era quality (era-clean)"
+    },
+    "great_vs_modgreat": {
+      "contrast": "great_vs_modgreat",
+      "n": 125,
+      "groups_per_class": {
+        "great": 10,
+        "modgreat": 6
+      },
+      "ba_judge_only": 0.44713261648745517,
+      "ba_prosody_only": 0.6564260112647209,
+      "ba_judge_plus_prosody": 0.583973374295955,
+      "increment": 0.1368407578084998,
+      "increment_ci": [
+        -0.0856843102073365,
+        0.31677824303832364
+      ],
+      "increment_mean": 0.13817597302664084,
+      "prosody_resid_judge_ba": 0.6968766001024065,
+      "prosody_resid_judge_perm_p": 0.027972027972027972,
+      "status": "VOID (judge too weak: ba_judge=0.447<0.7)",
+      "note": "CONTROL: era (prosody adding here => era not quality)"
+    },
+    "great_vs_modhuman": {
+      "contrast": "great_vs_modhuman",
+      "n": 127,
+      "groups_per_class": {
+        "great": 10,
+        "modhuman": 60
+      },
+      "ba_judge_only": 0.9921875,
+      "ba_prosody_only": 0.7869543650793651,
+      "ba_judge_plus_prosody": 0.9764384920634921,
+      "increment": -0.01574900793650791,
+      "increment_ci": [
+        -0.04002099286884396,
+        0.0
+      ],
+      "increment_mean": -0.01596083274813406,
+      "prosody_resid_judge_ba": 0.4718501984126984,
+      "prosody_resid_judge_perm_p": 0.9050949050949051,
+      "status": "REDUNDANT (judge captures it)",
+      "note": "COMPARE: original F2 (quality+era confounded)"
+    }
+  },
+  "verdict": "NO clean quality signal beyond the judge (primary: REDUNDANT (judge captures it))",
+  "HELDOUT_primary": {
+    "skipped": "DEV primary did not ADD; held-out NOT touched (M7)"
+  }
+}

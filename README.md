@@ -37,7 +37,8 @@ Start with `AGENTS.md` (the operating manual), then:
 ```
 AGENTS.md  README.md  .gitignore  pytest.ini
 docs/      all research markdown (goals, methodology, log, findings, decisions, …)
-src/       Python modules + scripts   — run as `.venv/bin/python3 src/<name>.py`
+src/       shared libraries at root (features_lib, evaluate, …); drivers grouped in
+  ├─ corpus/  extract/  experiments/  judge/  zuco/   — run as `.venv/bin/python3 src/<group>/<name>.py`
 tests/     pytest suite               — run as `.venv/bin/python -m pytest`
 data/      inputs: manifest.csv, slop_lists/, passages/, passages_raw/, texts/
 results/   generated artifacts, grouped:

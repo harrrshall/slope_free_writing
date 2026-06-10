@@ -6,7 +6,7 @@ and the sentence text. rawEEG/rawET are NOT read, so memory stays low and the 1-
 deleted right after. Field logic mirrors the official ZuCo data_loading_helpers.extract_word_level_data
 (but uses h5py `[()]` since `.value` was removed in modern h5py).
 
-Usage: python src/zuco_parse.py <path_to_results.mat> <out.csv>
+Usage: python src/zuco/zuco_parse.py <path_to_results.mat> <out.csv>
 """
 import os
 import re

@@ -191,3 +191,16 @@ the context, the reasoning, and the status. Newest at the bottom.
       canonical-vs-neglected of the SAME subgenre.
   (c) SEQUENCING: the paraphrase-robustness test (pivot) is cheap, runs on existing data, and is where the
       novelty is; candidate to run BEFORE/ALONGSIDE the expensive within-author build, not only as a fallback.
+
+## D18 - Subgroup src/ by purpose (2026-06-09)
+
+src/ had grown to 29 flat scripts. Grouped the 24 driver scripts into corpus/ extract/ experiments/ judge/
+zuco/, keeping the 5 SHARED LIBRARIES (features_lib, lexical_features, sequence_features, typography,
+evaluate) flat at src/ root. Why this split: the libraries are imported by bare name across many drivers, so
+keeping them at one stable location (src/ root) means pytest.ini (pythonpath=src) and the by-name imports are
+untouched. Each subdir driver: (a) REPO depth bumped 2->3 levels; (b) a one-line sys.path bootstrap adds src/
+root so `from features_lib import ...` resolves under `python src/<group>/<name>.py`. Sibling imports (e.g.
+paraphrase_eval_multi -> paraphrase_eval, both in experiments/) resolve via the script-dir on sys.path[0].
+Fixed the one hardcoded internal path (zuco_fetch -> src/zuco/zuco_parse.py). VERIFIED: all 29 files import,
+18/18 tests pass, crux_eval.build + stage1.build_dev load correctly from the new layout. Alternative rejected:
+moving libraries into src/lib/ too (would force REPO changes + path hacks on every file for no extra clarity).

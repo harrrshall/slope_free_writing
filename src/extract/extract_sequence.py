@@ -12,11 +12,12 @@ import numpy as np
 import pandas as pd
 import spacy
 
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from features_lib import (stress_features, syntactic_features, mattr,
                           _stress_series, _syntactic_series, PROSODY_COLS)
 from sequence_features import (order_features, order_features_shuffled, passage_seed, ORDER_COLS)
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ORDER_SHUF_COLS = [c + "_shuf" for c in ORDER_COLS]
 
 

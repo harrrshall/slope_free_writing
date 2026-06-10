@@ -14,11 +14,12 @@ import pandas as pd
 import spacy
 from sklearn.metrics import balanced_accuracy_score
 
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from features_lib import extract_features, PROSODY_COLS
 from lexical_features import lexical_features, SLOP_BASELINE_COLS
 from paraphrase_eval import paired_oof
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CLASSES = ["modhuman", "slop"]
 REAL_DIRS = [os.path.join(REPO, "data", "passages_para"),        # realization 1 (original run)
              os.path.join(REPO, "data", "passages_para_r2"),

@@ -7,7 +7,7 @@ frozen 'PROCEED iff ALL', we do not advance (functionally a non-validation).
 """
 import argparse, json, os
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def main():

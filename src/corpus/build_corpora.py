@@ -24,7 +24,7 @@ manifest.csv. Real human prose (Gutenberg + Reuters) satisfies M4.
 import os, re, csv, sys
 import numpy as np
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LO, HI = 150, 400
 N_PER_CLASS = 80
 PER_SOURCE_CAP = 12          # ~15% of 80

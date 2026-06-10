@@ -14,9 +14,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.inspection import permutation_importance
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from features_lib import PROSODY_COLS, TIER_B_COLS, FEATURE_GROUPS, RHYTHM_GROUPS
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def bootstrap_ci(y, pred, n=2000, seed=0):

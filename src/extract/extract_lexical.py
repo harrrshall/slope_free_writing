@@ -4,9 +4,10 @@ import argparse, os
 import numpy as np
 import pandas as pd
 import spacy
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from lexical_features import lexical_features, LEXICAL_COLS
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def main():

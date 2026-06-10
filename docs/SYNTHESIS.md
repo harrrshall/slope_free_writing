@@ -11,11 +11,13 @@ register/era, but it does **not** finely rank within-human writing quality, and 
 **degrades as models improve** (it nearly disappears for GPT-4o). We ruled out the obvious "we're processing
 it wrong" explanations — the classifier (D14) and the order of the features (F3) — and a speech-grounded
 prominence front-end (F7) barely moved detection while giving only a *borderline* lift to the quality
-contrast. The honest conclusion: prosody is at best **one minor, complementary term** in a composite reward
-(anti-monotony / rhythmic variation), not a standalone quality signal (D14). The two questions we could
-**not** settle — does a *learned representation* beat hand-formulas, and does a *de-confounded, higher-power*
-dataset change the within-human quality picture — both run into the same wall: **data scale and a confounded
-contrast.**
+contrast. The decisive test (**F8**, the crux): against a **real strong judge** (a blind frontier LLM rating
+quality), prosody is **redundant** — the judge separates within-human quality essentially perfectly (AUC 1.000)
+and prosody adds **nothing** (increment −0.008, residual *below chance*); an era control proves what prosody
+still carries is **era/register, not quality**. So prosody is **not even a minor quality term** in a composite
+reward: a strong judge already has everything it offered for quality. Its only defensible robust niche is
+anti-monotony / origin signal for *weak* AI, not quality. The remaining un-settled question — does a *learned
+representation* beat hand-formulas — runs into the same wall as ever: **data scale.**
 
 ## The question (North Star)
 
@@ -46,6 +48,7 @@ verifier agents. Several findings are clean **negatives** — recorded as such.
 | **F6** | Does it hold for a frontier model? | prosody flags GPT-4o at only **0.838** (vs 0.925 for weak models), pre-paraphrase | Frontier prose is already human-like |
 | **Z2** | Does F5 generalize (2nd paraphraser + 2nd source)? | back-translation: +0.039 (ns); GPT-4o: **−0.008** | F5 is **conditional/narrow** |
 | **F7** | Is *dictionary stress* the bottleneck? (speech-grounded prominence, GPU) | detection: ~no change; quality great-vs-modhuman 0.756→**0.825**, +0.069 **CI [0.000, 0.147]** | Split: no for detection, **borderline yes** for quality |
+| **F8** | Does prosody add over a *strong frontier judge*? (the crux) | blind Sonnet judge AUC **1.000** on within-era quality; prosody increment **−0.008**, residual below chance; era control: prosody=era (resid 0.697, p=0.028) | **REDUNDANT** — drop from the composite |
 
 (Plus an exploratory probe: Paul Graham essays vs AI — prosody 0.96 but lexical 0.95, so prosody is **not
 unique** there; it tracks register/genre, not quality.)

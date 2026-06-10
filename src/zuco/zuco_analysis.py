@@ -7,8 +7,8 @@ word), is_boundary (our clause/sentence boundary). CONFOUNDS: length, log-freq (
 position, sentence-final. Binding = improvement of the PROSODY block over confounds-only (LR test) + the
 is_boundary coefficient. Skipped words (nFix=0) modelled separately from reading times.
 
-`python src/zuco_analysis.py --test-surprisal`  -> sanity-check surprisal on one sentence
-`python src/zuco_analysis.py`                   -> full analysis -> results/report_zuco.json
+`python src/zuco/zuco_analysis.py --test-surprisal`  -> sanity-check surprisal on one sentence
+`python src/zuco/zuco_analysis.py`                   -> full analysis -> results/report_zuco.json
 """
 import glob
 import json
@@ -20,7 +20,7 @@ import pandas as pd
 import pronouncing
 import wordfreq
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _PUNCT_BOUNDARY = {",", ";", ":", "—", "–", "-", "(", ")", ".", "!", "?"}
 STOP = set(open(os.path.join(REPO, "data", "slop_lists", "nltk_stopwords.txt")).read().split())
 

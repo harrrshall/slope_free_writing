@@ -21,9 +21,10 @@ then re-run evaluate.py on the (unchanged) quarantine_split_p1.json.
 """
 import os, shutil, sys
 import pandas as pd
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from typography import normalize_typography
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 PASS = os.path.join(REPO, "data", "passages")
 RAW = os.path.join(REPO, "data", "passages_raw")
 

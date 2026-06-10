@@ -12,9 +12,10 @@ import numpy as np
 import pandas as pd
 import spacy
 
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from typography import normalize_typography
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LO, HI = 150, 400
 rng = np.random.default_rng(0)
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])

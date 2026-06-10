@@ -10,12 +10,13 @@ import json
 import os
 import pandas as pd
 
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from features_lib import PROSODY_COLS
 from sequence_features import ORDER_COLS
 from lexical_features import LEXICAL_COLS
 from evaluate import logreg, _oof_ba, h2_contrast, group_bootstrap_increment_ci
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ORDER_SHUF = [c + "_shuf" for c in ORDER_COLS]
 A, B = "great", "modhuman"
 SUMMARY_INCREMENT_OVER_SLOP = 0.102   # F2 reference (summary prosody), the bar PRIMARY-3 must clear

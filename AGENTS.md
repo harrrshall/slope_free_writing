@@ -21,8 +21,8 @@ If you ever feel tension between "make progress" and "be honest about a negative
 
 - **North Star (the big goal):** find a *better reward model for writing quality* — one that, used in RLHF/preference optimization, produces **slop-free writing** without collapsing diversity. This is the problem the whole project serves.
 - **Prosody probe — ANSWERED (2026-06-08).** Whether text-derived prosody carries a separable writing-quality signal is settled: **real but weak.** It separates human prose from *weaker* AI and tracks register/era, but is a poor within-human quality ranker, and its AI-detection edge degrades as models improve. We ruled out the classifier (D14), the feature order (F3), and — for detection — the extraction front-end (F7) as the cause. Full arc with numbers in `docs/SYNTHESIS.md` (findings F1–F7). So prosody is at most **one minor, complementary term**, never a standalone reward (DECISIONS D14).
-- **Current direction (the instant goal, 2026-06-08):** build and test a **composite, interpretable writing-quality reward** — prosody (one weak term) + discourse coherence + lexical anti-slop — used *inside* a **diversity-preserving optimizer** (DivPO / DPH-RL forward-KL / QEMPO / GFlowNet), to reduce slop without collapsing diversity. **A verified literature survey (`docs/RELATED_WORK.md`) found this specific combination is novel:** the two halves each exist (DivPO etc. for diversity; LongWriter-Zero's composite writing reward) but no one wires a *hand-designed composite prose reward* into a *diversity-preserving* optimizer. The closest prior art, **DARLING** (arXiv:2509.02534), uses a *learned* quality + *learned* diversity signal — not an interpretable composite. **Read `docs/RELATED_WORK.md` before any prior-art search on this — do not re-research it.**
-- **The crux to settle first:** does the prosody term add measurable signal *on top of* a strong learned reward model, given it is real-but-weak? If not, the "composite incl. prosody" framing loses its point. The strongest next *new* signal to run through the existing gauntlet is **discourse coherence** (the "good for 3 lines then collapses" failure mode), which is likely stronger than prosody for both quality and AI-detection.
+- **Current direction (the instant goal, 2026-06-08):** build and test a **composite, interpretable writing-quality reward** — discourse coherence + lexical anti-slop (**prosody DROPPED for quality per F8**) — used *inside* a **diversity-preserving optimizer** (DivPO / DPH-RL forward-KL / QEMPO / GFlowNet), to reduce slop without collapsing diversity. **A verified literature survey (`docs/RELATED_WORK.md`) found this specific combination is novel:** the two halves each exist (DivPO etc. for diversity; LongWriter-Zero's composite writing reward) but no one wires a *hand-designed composite prose reward* into a *diversity-preserving* optimizer. The closest prior art, **DARLING** (arXiv:2509.02534), uses a *learned* quality + *learned* diversity signal — not an interpretable composite. **Read `docs/RELATED_WORK.md` before any prior-art search on this — do not re-research it.**
+- **The crux — SETTLED (2026-06-09, finding F8).** Asked: does prosody add quality signal *on top of* a strong judge (what a real reward model uses)? Answer: **NO — prosody is REDUNDANT.** A blind frontier LLM judge separates within-era quality essentially perfectly (AUC 1.000) and prosody adds nothing (increment −0.008, residual below chance); an era control proves prosody's remaining signal is **era/register, not quality**. So **prosody is DROPPED from the composite quality reward.** The next candidate signal to run through the existing gauntlet is **discourse coherence** (the "good for 3 lines then collapses" failure mode). DEEPER LESSON to weigh first: F8 shows a strong judge may already be a near-ceiling quality backbone — so the real open question is whether **any** interpretable hand signal beats a strong judge for quality, or whether the contribution should pivot entirely to the *diversity-preserving optimizer* around a judge/RM quality term (the genuinely novel half per `docs/RELATED_WORK.md`).
 - **How to find today's task:** start from `docs/SYNTHESIS.md` (where we are) and `docs/RELATED_WORK.md` (what's already been done), then advance the current direction. `docs/METHODOLOGY.md` holds the original phased plan; Phase 0 (the separation pre-test) still gates any *new* candidate signal before it earns a reward term.
 
 ### Research stance — exploration over application (read this before proposing a "solution")
@@ -51,16 +51,28 @@ Every document and its path. Know what each is for:
 | Environment | `docs/ENVIRONMENT.md` | Setup, libraries, data sources, exact commands. |
 | Active plan | `docs/EXTRACTION_UPGRADE_PLAN.md` | Current experimental arc (is the bottleneck the signal or the extraction?). |
 
-### Repository layout (adopted 2026-06-08, DECISIONS D15)
+### Repository layout (D15; src/ subgrouped 2026-06-09, D18)
 
 ```
 AGENTS.md  README.md  .gitignore  pytest.ini
 docs/      all research markdown (this table)
-src/       Python modules + scripts — run as `.venv/bin/python3 src/<name>.py`
+src/       shared LIBRARIES at root (features_lib, lexical_features, sequence_features,
+           typography, evaluate); driver scripts grouped by purpose:
+  ├─ corpus/       build/clean/split corpora (build_corpora, make_split, apply_*, backtranslate, build_gpt4o)
+  ├─ extract/      feature extraction (extract_features, extract_lexical, extract_sequence)
+  ├─ experiments/  analysis drivers (stage1_sequence, paraphrase_eval*, robustness_eval, pg_experiment,
+  │                values_pipeline, crux_eval, score_heldout)
+  ├─ judge/        crux LLM-judge pipeline (judge_prep, judge_collect, judge_score)
+  └─ zuco/         ZuCo EEG pipeline (zuco_parse, zuco_fetch, zuco_analysis)
+           Run as `.venv/bin/python3 src/<group>/<name>.py`. Libraries run/import by bare name.
 tests/     pytest suite — run as `.venv/bin/python -m pytest`
 data/      inputs: manifest.csv, slop_lists/, passages/, passages_raw/, texts/
 results/   generated artifacts, grouped: features/ (*.parquet) · reports/ (*report*.json) · splits/ (quarantine_split*.json)
 ```
+
+`REPO` resolves to the repo root from any file (libraries 2 levels up, subdir drivers 3). Subdir drivers add
+`src/` root to `sys.path` (a one-line bootstrap) so `from features_lib import ...` resolves; `pytest.ini` puts
+`src/` on the path for tests. Do not relocate a file without updating its `REPO` depth and logging it.
 
 Scripts re-anchor `REPO` to the repo root (`dirname(dirname(__file__))`), so every data/artifact
 path resolves from the root. Generated outputs default into `results/`; the experiment log written

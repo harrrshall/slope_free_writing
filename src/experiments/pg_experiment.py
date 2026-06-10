@@ -16,11 +16,12 @@ import pandas as pd
 import spacy
 from sklearn.metrics import balanced_accuracy_score
 
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # src/ root on path for library imports
 from features_lib import extract_features, PROSODY_COLS
 from lexical_features import lexical_features, SLOP_BASELINE_COLS
 from evaluate import logreg, _oof_ba, group_perm_test, group_bootstrap_increment_ci, group_bootstrap_ci
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 rng = np.random.default_rng(0)
 
 

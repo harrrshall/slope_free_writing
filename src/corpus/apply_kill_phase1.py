@@ -7,7 +7,7 @@ are reported as diagnostics.
 """
 import argparse, json, os
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def main():
